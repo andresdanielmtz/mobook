@@ -6,7 +6,7 @@
 import { useEffect, useState } from "react"
 import { getBooks } from "../api/getBooks"
 import { type Item } from "../model"
-import Card from "../components/Card"
+import BookCard from "../components/BookCard"
 
 export const Home: React.FC = () => {
     const [bookData, setBookData] = useState<Item[]>([]);
@@ -14,17 +14,25 @@ export const Home: React.FC = () => {
         getBooks().then((payload) => setBookData(payload)).then(() => {
             console.log(JSON.stringify(bookData))
         })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+    
     return (
-        <div>
-            {bookData.map((item) => {
-                return (
-                    <div>
-                        <Card imageLinks={item.volumeInfo.imageLinks} title={item.volumeInfo.title} />
-                    </div>
-                )
-            }
-            )}
+        <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(4, 1fr)', 
+            gap: '8px',
+            padding: '8px',
+            transform: 'scale(0.9)'
+        }}>
+            {bookData.map((item) => (
+            <div key={item.id}>
+            <BookCard 
+                imageLinks={item.volumeInfo.imageLinks} 
+                title={item.volumeInfo.title} 
+            />
+            </div>
+            ))}
         </div>
     )
 }
