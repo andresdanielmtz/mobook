@@ -106,4 +106,5 @@ deployment_keys.tar
 
 .github/.release
 release-artifacts-*
-
+.build
+build
