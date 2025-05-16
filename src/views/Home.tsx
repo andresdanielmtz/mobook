@@ -14,7 +14,6 @@ export const Home: React.FC = () => {
         getBooks().then((payload) => setBookData(payload)).then(() => {
             console.log(JSON.stringify(bookData))
         })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     
     return (
