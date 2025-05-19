@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { getBooks } from "../api/getBooks";
 import { type Item } from "@/model";
 import BookCard from "../components/BookCard";
+import { LoadingSpinner } from "@/components/ui/loading.tsx";
 
 export const Home: React.FC = () => {
   const [bookData, setBookData] = useState<Item[]>([]);
@@ -17,6 +18,15 @@ export const Home: React.FC = () => {
         console.log(JSON.stringify(bookData));
       });
   }, []);
+
+  // Loading state.
+  if (bookData.length == 0) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <LoadingSpinner />
+      </div>
+    );
+  }
 
   return (
     <div
