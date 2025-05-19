@@ -1,4 +1,4 @@
-import type { ImageLinks } from "../model";
+import type { ImageLinks } from "@/model";
 
 interface ICard {
   imageLinks?: ImageLinks;

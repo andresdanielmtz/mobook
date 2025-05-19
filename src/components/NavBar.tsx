@@ -3,13 +3,18 @@ import {
   NavigationMenu,
   NavigationMenuIndicator,
   NavigationMenuItem,
-  NavigationMenuList,
   NavigationMenuLink,
+  NavigationMenuList,
   NavigationMenuTrigger,
   NavigationMenuViewport,
 } from "@/components/ui/navigation-menu";
 import React from "react";
 import { cn } from "@/lib/utils";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar.tsx";
 
 const Links: { title: string; url: string }[] = [
   {
@@ -23,10 +28,6 @@ const Links: { title: string; url: string }[] = [
   {
     title: "Dashboard",
     url: "/dashboard",
-  },
-  {
-    title: "Profile",
-    url: "/profile",
   },
 ];
 
@@ -47,7 +48,7 @@ const ListItem = React.forwardRef<React.ComponentRef<"a">, ListItemProps>(
             ref={ref}
             className={cn(
               "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-              className
+              className,
             )}
             onClick={() => navigate(url)}
             {...props}
@@ -59,14 +60,16 @@ const ListItem = React.forwardRef<React.ComponentRef<"a">, ListItemProps>(
         </NavigationMenuLink>
       </li>
     );
-  }
+  },
 );
 ListItem.displayName = "ListItem";
 
 const NavBar = () => {
+  const navigate = useNavigate();
+
   return (
     <NavigationMenu style={{ position: "static" }}>
-      <h2 className="mt-10 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0">
+      <h2 className="mt-10 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0 mr-5">
         Mobook
       </h2>
 
@@ -80,6 +83,15 @@ const NavBar = () => {
         ))}
         <NavigationMenuIndicator />
         <NavigationMenuViewport />
+        <NavigationMenuItem key="profile">
+          <Avatar
+            onClick={() => navigate("/profile")}
+            className="justify-end ml-5"
+          >
+            <AvatarImage src="" />
+            <AvatarFallback>AM</AvatarFallback>
+          </Avatar>
+        </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>
   );

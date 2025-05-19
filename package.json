@@ -2,7 +2,7 @@
   "name": "mobook",
   "private": true,
   "version": "0.1.0",
-  "homepage": "https://andresdanielmtz.github.io/mobook/",
+  "homepage": "https://andresdanielmtz.github.io/mobook",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -20,8 +20,7 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@fontsource/roboto": "^5.2.5",
-    "@mui/icons-material": "^7.1.0",
-    "@mui/material": "^7.1.0",
+    "@radix-ui/react-avatar": "^1.1.9",
     "@radix-ui/react-navigation-menu": "^1.2.12",
     "@radix-ui/react-slot": "^1.2.2",
     "@tailwindcss/vite": "^4.1.7",

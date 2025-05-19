@@ -15,5 +15,5 @@ export default defineConfig({
     outDir: "./build",
     emptyOutDir: true, // also necessary
   },
-  base: "https://andresdanielmtz.github.io/mobook/",
+  base: "https://andresdanielmtz.github.io/mobook",
 });
