@@ -2,9 +2,9 @@ name: Build Vite React App
 
 on:
   push:
-    branches: [main]
+    branches: ["**"]
   pull_request:
-    branches: [main]
+    branches: ["**"]
 
 jobs:
   build:
@@ -17,7 +17,7 @@ jobs:
       - name: 🟢 Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22.14
           cache: "npm"
 
       - name: 📦 Install dependencies
