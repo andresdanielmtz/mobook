@@ -21,7 +21,9 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: Build project
-        run: npm run build
+        run: vite build
+        env:
+          VITE_BOOK_API_URL: ${{ secrets.VITE_BOOK_API_URL }}
 
       - name: Upload production-ready build files
         uses: actions/upload-artifact@v4
