@@ -20,21 +20,15 @@ export const Home: React.FC = () => {
 
   return (
     <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(4, 1fr)",
-        gap: "8px",
-        padding: "8px",
-        transform: "scale(0.9)",
-      }}
+      className="flex flex-col items-center gap-4 px-2 overflow-y-auto max-h-screen
+                sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 sm:gap-6 sm:overflow-y-visible sm:max-h-none"
     >
       {bookData.map((item) => (
-        <div key={item.id}>
-          <BookCard
-            imageLinks={item.volumeInfo.imageLinks}
-            title={item.volumeInfo.title}
-          />
-        </div>
+        <BookCard
+          key={item.id}
+          imageLinks={item.volumeInfo.imageLinks}
+          title={item.volumeInfo.title}
+        />
       ))}
     </div>
   );

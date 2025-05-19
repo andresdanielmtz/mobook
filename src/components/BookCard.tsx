@@ -1,4 +1,5 @@
 import type { ImageLinks } from "@/model";
+import "./BookCard.css";
 
 interface ICard {
   imageLinks?: ImageLinks;
@@ -8,24 +9,23 @@ interface ICard {
 const BookCard = ({ imageLinks, title }: ICard) => {
   return (
     <div
-      key={title}
       tabIndex={0}
-      className="w-48 rounded overflow-hidden relative group focus:outline-none cursor-pointer my-5"
+      className="aspect-3-4 sm:max-w-xs rounded-lg overflow-hidden relative group focus:outline-none cursor-pointer my-5 shadow hover:shadow-lg transition-shadow duration-300 bg-white flex flex-col"
     >
-      {!imageLinks ? (
-        <div className="w-full h-48 object-contain content-center justify-items-center bg-gray-300">
-          <p className="leading-7 [&:not(:first-child)]:mt-6 text-black">
-            {" "}
-            {title}{" "}
+      <div className="w-full aspect-[3/4] bg-gray-200 flex items-center justify-center">
+        {!imageLinks ? (
+          <p className="text-center text-gray-700 px-2 font-semibold">
+            {title}
           </p>
-        </div>
-      ) : (
-        <img
-          className="w-full h-48 object-contain"
-          src={imageLinks && imageLinks.thumbnail ? imageLinks.thumbnail : ""}
-        />
-      )}
-      <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 text-white p-2 text-center opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus:opacity-100">
+        ) : (
+          <img
+            className="w-full h-full object-contain bg-gray-100"
+            src={imageLinks.thumbnail}
+            alt={title}
+          />
+        )}
+      </div>
+      <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-70 text-white p-2 text-center opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus:opacity-100 text-sm font-medium">
         {title}
       </div>
     </div>
