@@ -6,7 +6,7 @@
 import { useEffect, useState } from "react";
 import { getBooks } from "../api/getBooks";
 import { type Item } from "@/model";
-import BookCard from "../components/BookCard";
+import BookCard from "../components/BookCard/BookCard.tsx";
 import { LoadingSpinner } from "@/components/ui/loading.tsx";
 
 export const Home: React.FC = () => {
@@ -38,6 +38,7 @@ export const Home: React.FC = () => {
           key={item.id}
           imageLinks={item.volumeInfo.imageLinks}
           title={item.volumeInfo.title}
+          id={item.id}
         />
       ))}
     </div>

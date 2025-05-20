@@ -24,6 +24,8 @@ jobs:
         run: npm run build
         env:
           VITE_BOOK_API_URL: ${{ secrets.VITE_BOOK_API_URL }}
+          VITE_BOOK_KEY: ${{ secrets.VITE_BOOK_KEY }}
+          VITE_BOOK_API_URL2: ${{ secrets.VITE_BOOK_API_URL2 }}
 
       - name: Upload production-ready build files
         uses: actions/upload-artifact@v4
