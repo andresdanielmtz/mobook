@@ -4,6 +4,7 @@ import { LoadingSpinner } from "@/components/ui/loading";
 import type { Item } from "@/model";
 import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { Markup } from "interweave";
 
 const Details = () => {
   const { id } = useParams<{ id: string }>();
@@ -71,7 +72,7 @@ const Details = () => {
           />
         )}
         <div className="flex-1 text-justify">
-          <p className="text-gray-600 mb-6">{data.volumeInfo.description}</p>
+          <Markup content={data.volumeInfo.description} />
 
           <h3 className="text-xl font-semibold text-gray-800 mb-4  my-5">
             Authors
