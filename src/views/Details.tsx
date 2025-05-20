@@ -58,7 +58,7 @@ const Details = () => {
     <div className="container mx-auto p-6">
       <div className="flex flex-row items-center justify-between align-middle">
         <Button onClick={handleBack}> Back</Button>
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">
+        <h1 className="text-3xl font-bold text-gray-800 mb-6 text-justify">
           {data.volumeInfo.title}
         </h1>
       </div>
@@ -70,8 +70,47 @@ const Details = () => {
             alt={data.volumeInfo.title}
           />
         )}
-        <div className="flex-1">
+        <div className="flex-1 text-justify">
           <p className="text-gray-600 mb-6">{data.volumeInfo.description}</p>
+
+          <h3 className="text-xl font-semibold text-gray-800 mb-4  my-5">
+            Authors
+          </h3>
+          <ul className="list-disc list-inside mb-6">
+            {data.volumeInfo.authors?.map((author, index) => (
+              <li key={index} className="text-gray-600">
+                {author}
+              </li>
+            ))}
+
+            <h3 className="text-xl font-semibold text-gray-800 mb-4 my-5">
+              {" "}
+              Publisher
+            </h3>
+            <p className="text-gray-600 mb-6">{data.volumeInfo.publisher}</p>
+            {data.volumeInfo.publishedDate ? (
+              <h3 className="text-xl font-semibold text-gray-800 mb-4 my-5">
+                {" "}
+                Published Date: {data.volumeInfo.publishedDate}
+              </h3>
+            ) : (
+              <h3 className="text-xl font-semibold text-gray-800 mb-4 my-5">
+                {" "}
+                Publish Date Unavailable
+              </h3>
+            )}
+
+            <h3 className="text-xl font-semibold text-gray-800 mb-4 my-5">
+              Categories
+            </h3>
+            <ul className="list-disc list-inside mb-6">
+              {data.volumeInfo.categories?.map((category, index) => (
+                <li key={index} className="text-gray-600">
+                  {category}
+                </li>
+              ))}
+            </ul>
+          </ul>
         </div>
       </div>
     </div>
