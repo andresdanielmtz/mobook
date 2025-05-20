@@ -25,3 +25,18 @@ export async function getBooksById(id: string): Promise<Item> {
 
   return data;
 }
+
+export async function getBooksByQuery(query: string): Promise<Item[]> {
+  const response = await fetch(
+    `${import.meta.env.VITE_BOOK_API_URL2}?q=${query}&key=${import.meta.env.VITE_BOOK_KEY}`,
+  );
+  console.log(
+    `Used URL: ${import.meta.env.VITE_BOOK_API_URL}?q=${query}&key=${import.meta.env.VITE_BOOK_KEY}`,
+  );
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.error.message);
+  }
+
+  return data.items;
+}

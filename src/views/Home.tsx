@@ -29,10 +29,7 @@ export const Home: React.FC = () => {
   }
 
   return (
-    <div
-      className="flex flex-col items-center gap-4 px-2 overflow-y-auto max-h-screen
-                sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 sm:gap-6 sm:overflow-y-visible sm:max-h-none"
-    >
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
       {bookData.map((item) => (
         <BookCard
           key={item.id}
