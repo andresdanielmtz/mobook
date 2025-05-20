@@ -6,6 +6,7 @@
 import { getBooksByQuery } from "@/api/getBooks";
 import BookCard from "@/components/BookCard/BookCard";
 import { Input } from "@/components/ui/input";
+import { LoadingSpinner } from "@/components/ui/loading";
 import type { Item } from "@/model";
 import { useEffect, useState } from "react";
 
@@ -13,6 +14,7 @@ export const SearchView = () => {
   const [searchResults, setSearchResults] = useState<Item[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const timerId = setTimeout(() => {
@@ -25,6 +27,7 @@ export const SearchView = () => {
   }, [searchQuery]);
 
   useEffect(() => {
+    setLoading(true);
     if (debouncedSearchQuery.trim() === "") {
       setSearchResults([]);
       return;
@@ -38,6 +41,9 @@ export const SearchView = () => {
       .catch((error) => {
         console.error("Error fetching books:", error);
         setSearchResults([]);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, [debouncedSearchQuery]);
 
@@ -55,9 +61,14 @@ export const SearchView = () => {
         onChange={handleSearchChange}
         className="mb-4"
       />
+      {loading ||
+        (searchResults.length === 0 && (
+          <div className="flex items-center justify-center">
+            <LoadingSpinner />
+          </div>
+        ))}
       {searchResults.length > 0 && (
         <div>
-          <h2 className="text-xl font-semibold mb-2">Results:</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {searchResults.map((book) => (
               <BookCard
@@ -69,9 +80,6 @@ export const SearchView = () => {
             ))}
           </div>
         </div>
-      )}
-      {searchQuery.trim() !== "" && searchResults.length === 0 && (
-        <p>No results found for "{searchQuery}".</p>
       )}
     </div>
   );
