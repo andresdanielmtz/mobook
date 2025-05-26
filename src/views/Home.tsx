@@ -9,13 +9,16 @@ import { type Item } from "@/model";
 import BookCard from "../components/BookCard/BookCard.tsx";
 import { LoadingSpinner } from "@/components/ui/loading.tsx";
 
-export const Home: React.FC = () => {
+export const HomeView: React.FC = () => {
   const [bookData, setBookData] = useState<Item[]>([]);
   useEffect(() => {
     getBooks()
-      .then((payload) => setBookData(payload))
-      .then(() => {
-        console.log(JSON.stringify(bookData));
+      .then((payload) => {
+        setBookData(payload);
+      })
+      .catch((error) => {
+        console.error("Error fetching books:", error);
+        setBookData([]);
       });
   }, []);
 

@@ -6,10 +6,12 @@ import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Markup } from "interweave";
 
-const Details = () => {
+// Show specific book details by ID
+
+const DetailsView = () => {
   const { id } = useParams<{ id: string }>();
   const [data, setData] = React.useState<Item | null>(null);
-  const [loading, setLoading] = React.useState(true);
+  const [loading, setLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<Error | null>(null);
 
   useEffect(() => {
@@ -35,10 +37,9 @@ const Details = () => {
 
   const navigate = useNavigate();
   const handleBack = () => {
-    navigate(-1);
+    navigate(-1); // Go back to the previous page
   };
 
-  // Return loading state
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -46,6 +47,7 @@ const Details = () => {
       </div>
     );
   }
+
   // Return error state
   if (error) {
     return <div>Error: {error.message}</div>;
@@ -122,4 +124,4 @@ const Details = () => {
   );
 };
 
-export default Details;
+export default DetailsView;

@@ -1,5 +1,7 @@
 import { type Epub } from "./Epub.ts";
 
+// TODO: Separate this file into multiple files for better organization.
+
 export interface Content {
   kind: string;
   totalItems: number;
