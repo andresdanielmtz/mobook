@@ -11,6 +11,9 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  define: {
+    __APP_ENV__: process.env.VITE_VERCEL_ENV,
+  },
   build: {
     outDir: "./build",
     emptyOutDir: true, // also necessary
