@@ -159,26 +159,27 @@ const NavBar = () => {
           <NavigationMenuIndicator />
           <NavigationMenuViewport />
           {user && (
-            <NavigationMenuItem key="profile">
-              <Avatar
-                onClick={() => navigate("/profile")}
-                className="justify-end ml-5"
+            <>
+              <NavigationMenuItem key="profile">
+                <Avatar
+                  onClick={() => navigate("/profile")}
+                  className="justify-end ml-5"
+                >
+                  <AvatarImage src="" />
+                  <AvatarFallback>{user?.displayName}</AvatarFallback>
+                </Avatar>
+              </NavigationMenuItem>
+              <NavigationMenuItem
+                key="logout"
+                onClick={handleShowLogoutModal}
+                className="ml-5"
               >
-                <AvatarImage src="" />
-                <AvatarFallback>{user?.displayName}</AvatarFallback>
-              </Avatar>
-            </NavigationMenuItem>
+                <DialogTrigger>
+                  <ListItem>Logout</ListItem>
+                </DialogTrigger>
+              </NavigationMenuItem>
+            </>
           )}
-
-          <NavigationMenuItem
-            key="logout"
-            onClick={handleShowLogoutModal}
-            className="ml-5"
-          >
-            <DialogTrigger>
-              <ListItem>Logout</ListItem>
-            </DialogTrigger>
-          </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
     </Dialog>
