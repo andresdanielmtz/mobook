@@ -44,7 +44,8 @@ export const signInWithEmail = async (email: string, password: string) => {
 export const registerWithEmailAndPassword = async (
   email: string,
   password: string,
-  displayName: string,
+  firstName: string,
+  lastName: string,
 ) => {
   try {
     const result = await createUserWithEmailAndPassword(auth, email, password);
@@ -53,7 +54,8 @@ export const registerWithEmailAndPassword = async (
     await setDoc(doc(db, "users", user.uid), {
       uid: user.uid,
       email: user.email,
-      displayName: displayName,
+      firstName: firstName,
+      lastName: lastName,
       createdAt: new Date(),
     });
     return user;

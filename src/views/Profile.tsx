@@ -85,7 +85,7 @@ export const ProfileView = () => {
               </p>
             </div>
             <hr className="mb-6" />
-            // TODO: Add cancel button when editing bio.
+            {/* TODO: Add cancel button when editing bio. */}
             {isEditingBio ? (
               <div className="mb-4">
                 <textarea

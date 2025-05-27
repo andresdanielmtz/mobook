@@ -1,25 +1,39 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { auth } from "@/config/firebase";
+import { registerWithEmailAndPassword } from "@/services/authenticationServices";
 import { validateEmail } from "@/utils/email";
-import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 export const SignUpView: React.FC = () => {
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
+
   const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
 
   const navigate = useNavigate(); // will use later
 
   async function handleSignUp(e: React.FormEvent) {
     e.preventDefault();
+    if (!confirmPassword || password !== confirmPassword) {
+      console.error("Passwords do not match or confirm password is empty.");
+      throw new Error("Passwords do not match or confirm password is empty.");
+    }
+
     try {
-      const resp = await createUserWithEmailAndPassword(auth, email, password);
+      const resp = await registerWithEmailAndPassword(
+        email,
+        password,
+        firstName,
+        lastName,
+      );
+
+      if (!resp) return;
 
       // If the user is created successfully, we can redirect them to the home page
       navigate("/");
-      return resp.user.uid;
     } catch (e) {
       console.error(e);
     }
@@ -37,15 +51,43 @@ export const SignUpView: React.FC = () => {
         >
           <div className="mb-4">
             <label
+              className="block text-gray-700 text-sm font-bold"
+              htmlFor="firstName"
+            >
+              First Name
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-5"
+              id="firstName"
+              type="text"
+              placeholder="First Name"
+              onChange={(e) => setFirstName(e.target.value)}
+            />
+
+            <label
               className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="lastName"
+            >
+              Last Name
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-5"
+              id="email"
+              type="text"
+              placeholder="Last Name"
+              onChange={(e) => setLastName(e.target.value)}
+            />
+
+            <label
+              className="block text-gray-700 text-sm font-bold"
               htmlFor="email"
             >
               Email
             </label>
             <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-5"
               id="email"
-              type="text"
+              type="email"
               placeholder="Email"
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -78,7 +120,7 @@ export const SignUpView: React.FC = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
 
-            {password.length <= 6 && password.length > 0 ? (
+            {password.length < 6 && password.length > 0 ? (
               <Alert variant="destructive">
                 <AlertTitle>Warning</AlertTitle>
                 <AlertDescription>
@@ -88,6 +130,24 @@ export const SignUpView: React.FC = () => {
             ) : (
               ""
             )}
+          </div>
+          <div className="mb-6">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="confirm-password"
+            >
+              Confirm Password
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+              id="confirm-password"
+              type="password"
+              placeholder="******************"
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+            <p className="text-gray-600 text-xs italic">
+              Please, confirm your password.
+            </p>
           </div>
           <div className="flex items-center justify-between">
             <Button
