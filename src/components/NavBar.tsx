@@ -8,13 +8,28 @@ import {
   NavigationMenuTrigger,
   NavigationMenuViewport,
 } from "@/components/ui/navigation-menu";
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar.tsx";
+import { AuthContext } from "@/context/AuthContext";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog";
+import { Button } from "./ui/button";
+import { DialogTrigger } from "@radix-ui/react-dialog";
+import { type StoreUser } from "@/model/User";
+import { getUserById } from "@/services/authenticationServices";
+import getInitialsAdapter from "@/utils/avatar";
 
 const Links: { title: string; url: string }[] = [
   {
@@ -32,7 +47,7 @@ const Links: { title: string; url: string }[] = [
 ];
 
 interface ListItemProps extends React.ComponentPropsWithoutRef<"a"> {
-  url: string;
+  url?: string;
 }
 
 // TODO: Add description when hovering over the list item.
@@ -50,7 +65,7 @@ const ListItem = React.forwardRef<React.ComponentRef<"a">, ListItemProps>(
               "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
               className,
             )}
-            onClick={() => navigate(url)}
+            onClick={() => url && navigate(url)}
             {...props}
           >
             <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
@@ -64,36 +79,125 @@ const ListItem = React.forwardRef<React.ComponentRef<"a">, ListItemProps>(
 );
 ListItem.displayName = "ListItem";
 
-const NavBar = () => {
-  const navigate = useNavigate();
+interface WarningLogoutModalProps {
+  onClose: () => void;
+  onLogout: (event: React.FormEvent) => void;
+}
+
+const WarningLogoutModal = ({ onClose, onLogout }: WarningLogoutModalProps) => {
+  const handleLogout = (event: React.FormEvent) => {
+    onLogout(event);
+    onClose();
+  };
 
   return (
-    <NavigationMenu style={{ position: "static" }}>
-      <h2 className="mt-10 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0 mr-5">
-        Mobook
-      </h2>
+    <>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Ready to take a break?</DialogTitle>
+          <DialogDescription>
+            Just click logout if you're sure you want to sign out.
+          </DialogDescription>
+        </DialogHeader>
 
-      <NavigationMenuList>
-        {Links.map((link) => (
-          <NavigationMenuItem key={link.title}>
-            <NavigationMenuTrigger>
-              <ListItem url={link.url}>{link.title}</ListItem>
-            </NavigationMenuTrigger>
-          </NavigationMenuItem>
-        ))}
-        <NavigationMenuIndicator />
-        <NavigationMenuViewport />
-        <NavigationMenuItem key="profile">
-          <Avatar
-            onClick={() => navigate("/profile")}
-            className="justify-end ml-5"
-          >
-            <AvatarImage src="" />
-            <AvatarFallback>AM</AvatarFallback>
-          </Avatar>
-        </NavigationMenuItem>
-      </NavigationMenuList>
-    </NavigationMenu>
+        <DialogFooter>
+          <DialogClose>
+            <Button type="button" variant="secondary" onClick={onClose}>
+              Close
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={handleLogout}
+              className="ml-5"
+            >
+              Logout
+            </Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </>
+  );
+};
+
+const NavBar = () => {
+  const navigate = useNavigate();
+  const { logout, user } = useContext(AuthContext);
+  const [showLogoutModal, setShowLogoutModal] = React.useState<boolean>(false);
+  const [userData, setUserData] = useState<StoreUser>();
+
+  useEffect(() => {
+    if (!user) return;
+    getUserById(user.uid).then((payload) => {
+      setUserData(payload);
+    });
+  }, [user]);
+
+  function handleShowLogoutModal() {
+    setShowLogoutModal(true);
+  }
+  function handleCloseLogoutModal() {
+    setShowLogoutModal(false);
+  }
+
+  function handleLogout(event: React.FormEvent) {
+    event.preventDefault();
+    logout();
+    navigate("/"); // Will redirect from home to login page after.
+  }
+
+  return (
+    <Dialog>
+      <NavigationMenu style={{ position: "static" }}>
+        <h2 className="mt-10 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0 mr-5">
+          Mobook
+        </h2>
+        {showLogoutModal && (
+          <WarningLogoutModal
+            onClose={handleCloseLogoutModal}
+            onLogout={handleLogout}
+          />
+        )}
+
+        <NavigationMenuList>
+          {Links.map((link) => (
+            <NavigationMenuItem key={link.title}>
+              <NavigationMenuTrigger>
+                <ListItem url={link.url}>{link.title}</ListItem>
+              </NavigationMenuTrigger>
+            </NavigationMenuItem>
+          ))}
+          <NavigationMenuIndicator />
+          <NavigationMenuViewport />
+          {user && (
+            <>
+              <NavigationMenuItem key="profile">
+                <Avatar
+                  onClick={() => navigate(`/profile/${user?.uid}`)}
+                  className="justify-end ml-5 transition transform duration-200 hover:scale-150"
+                >
+                  <AvatarImage src="" />
+                  <AvatarFallback>
+                    {userData ? getInitialsAdapter(userData) : "AM"}
+                  </AvatarFallback>
+                </Avatar>
+              </NavigationMenuItem>
+              <NavigationMenuItem
+                key="logout"
+                onClick={handleShowLogoutModal}
+                className="ml-5"
+              >
+                <DialogTrigger>
+                  <ListItem className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                    Logout
+                  </ListItem>
+                </DialogTrigger>
+              </NavigationMenuItem>
+            </>
+          )}
+        </NavigationMenuList>
+      </NavigationMenu>
+    </Dialog>
   );
 };
 

@@ -21,7 +21,7 @@ jobs:
           cache: "npm"
 
       - name: 📦 Install dependencies
-        run: npm install
+        run: npm install --legacy-peer-deps
 
       - name: 🛠️ Build project with Vite
         run: npm run build
