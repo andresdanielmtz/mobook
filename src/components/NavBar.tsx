@@ -119,7 +119,7 @@ const WarningLogoutModal = ({ onClose, onLogout }: WarningLogoutModalProps) => {
 
 const NavBar = () => {
   const navigate = useNavigate();
-  const { logout } = useContext(AuthContext);
+  const { logout, user } = useContext(AuthContext);
   const [showLogoutModal, setShowLogoutModal] = React.useState<boolean>(false);
 
   function handleShowLogoutModal() {
@@ -158,15 +158,18 @@ const NavBar = () => {
           ))}
           <NavigationMenuIndicator />
           <NavigationMenuViewport />
-          <NavigationMenuItem key="profile">
-            <Avatar
-              onClick={() => navigate("/profile")}
-              className="justify-end ml-5"
-            >
-              <AvatarImage src="" />
-              <AvatarFallback>AM</AvatarFallback>
-            </Avatar>
-          </NavigationMenuItem>
+          {user && (
+            <NavigationMenuItem key="profile">
+              <Avatar
+                onClick={() => navigate("/profile")}
+                className="justify-end ml-5"
+              >
+                <AvatarImage src="" />
+                <AvatarFallback>{user?.displayName}</AvatarFallback>
+              </Avatar>
+            </NavigationMenuItem>
+          )}
+
           <NavigationMenuItem
             key="logout"
             onClick={handleShowLogoutModal}
