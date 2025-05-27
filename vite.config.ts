@@ -17,5 +17,5 @@ export default defineConfig({
   build: {
     emptyOutDir: true, // also necessary
   },
-  base: "https://andresdanielmtz.github.io/mobook",
+  base: "https://mobook-alpha.vercel.app/",
 });
