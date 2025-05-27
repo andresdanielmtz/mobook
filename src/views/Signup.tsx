@@ -15,6 +15,8 @@ export const SignUpView: React.FC = () => {
     e.preventDefault();
     try {
       const resp = await createUserWithEmailAndPassword(auth, email, password);
+
+      // If the user is created successfully, we can redirect them to the home page
       navigate("/");
       return resp.user.uid;
     } catch (e) {
@@ -79,7 +81,7 @@ export const SignUpView: React.FC = () => {
               <Alert variant="destructive">
                 <AlertTitle>Warning</AlertTitle>
                 <AlertDescription>
-                  La contraseña debe de ser de 6 caractéres mínimo.
+                  Password should be at least 6 characters.
                 </AlertDescription>
               </Alert>
             ) : (

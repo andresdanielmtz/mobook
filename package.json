@@ -21,6 +21,7 @@
     "@emotion/styled": "^11.14.0",
     "@fontsource/roboto": "^5.2.5",
     "@radix-ui/react-avatar": "^1.1.9",
+    "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-navigation-menu": "^1.2.12",
     "@radix-ui/react-slot": "^1.2.2",
     "@tailwindcss/vite": "^4.1.7",

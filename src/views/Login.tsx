@@ -67,10 +67,10 @@ const LoginView = () => {
           </div>
         </form>
       </div>
-      <p onClick={() => navigate("/signup")}>
+      <a onClick={() => navigate("/signup")}>
         {" "}
-        Don't have an account? Create one.{" "}
-      </p>
+        Don't have an account? Let's create one!{" "}
+      </a>
     </div>
   );
 };
