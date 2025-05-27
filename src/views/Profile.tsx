@@ -80,9 +80,21 @@ export const ProfileView = () => {
               <p>
                 <b>Email:</b> {userData.email}
               </p>
-              <p>
-                <b>Display Name:</b> {userData.displayName || "N/A"}
-              </p>
+              {userData.displayName && (
+                <p>
+                  <b>Display Name:</b> {userData.displayName || "N/A"}
+                </p>
+              )}
+              {userData.firstName && userData.lastName && (
+                <>
+                  <p>
+                    <b>First Name:</b> {userData.firstName || "N/A"}
+                  </p>
+                  <p>
+                    <b>Last Name:</b> {userData.lastName}
+                  </p>
+                </>
+              )}
             </div>
             <hr className="mb-6" />
             {/* TODO: Add cancel button when editing bio. */}
