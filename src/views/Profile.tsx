@@ -43,6 +43,7 @@ export const ProfileView = () => {
     }
     if (editingBioText.trim() === "") {
       console.warn("Editing bio text is empty, not updating.");
+      setIsEditingBio(false);
       return;
     }
     updateBioByUserID(userId || "", editingBioText)
@@ -59,9 +60,11 @@ export const ProfileView = () => {
       })
       .catch((error) => {
         console.error("Error updating bio:", error);
+      })
+      .finally(() => {
+        setEditingBioText("");
+        setIsEditingBio(false);
       });
-
-    setIsEditingBio(false);
   };
   return (
     <div>
