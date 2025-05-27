@@ -7,7 +7,7 @@ import { AuthProvider } from "./context/AuthContext";
 function App() {
   return (
     <>
-      <BrowserRouter basename="/mobook">
+      <BrowserRouter basename="/">
         <AuthProvider>
           <AppRouter />
         </AuthProvider>
