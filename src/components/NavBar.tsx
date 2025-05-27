@@ -8,7 +8,7 @@ import {
   NavigationMenuTrigger,
   NavigationMenuViewport,
 } from "@/components/ui/navigation-menu";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import {
   Avatar,
@@ -28,6 +28,9 @@ import {
 import { Button } from "./ui/button";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import getInitials from "@/utils/avatar";
+import { StoreUser } from "@/model/User";
+import { getUserById } from "@/services/authenticationServices";
+import getInitialsAdapter from "@/utils/avatar";
 
 const Links: { title: string; url: string }[] = [
   {
@@ -122,6 +125,14 @@ const NavBar = () => {
   const navigate = useNavigate();
   const { logout, user } = useContext(AuthContext);
   const [showLogoutModal, setShowLogoutModal] = React.useState<boolean>(false);
+  const [userData, setUserData] = useState<StoreUser>();
+
+  useEffect(() => {
+    if (!user) return;
+    getUserById(user.uid).then((payload) => {
+      setUserData(payload);
+    });
+  }, [user]);
 
   function handleShowLogoutModal() {
     setShowLogoutModal(true);
@@ -168,7 +179,7 @@ const NavBar = () => {
                 >
                   <AvatarImage src="" />
                   <AvatarFallback>
-                    {getInitials(user?.displayName)}
+                    {userData ? getInitialsAdapter(userData) : "AM"}
                   </AvatarFallback>
                 </Avatar>
               </NavigationMenuItem>

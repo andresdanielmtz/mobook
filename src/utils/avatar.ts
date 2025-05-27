@@ -1,6 +1,24 @@
+import type { StoreUser } from "@/model/User";
+
+// This function returns an initial depending on whether you have first and last name OR if you have the display name. :)
+
+export default function getInitialsAdapter(user: StoreUser): string {
+  if (user.firstName && user.lastName) {
+    const initials = getInitials(`${user.firstName} ${user.lastName}`);
+    if (!initials) return "";
+    return initials;
+  } else if (user.displayName) {
+    const initials = getInitials(user.displayName);
+    if (!initials) return "";
+    return initials;
+  }
+
+  return "";
+}
+
 // Returns the initials of a given displayName. It is supposed to have at least one valid word for it to work.
 
-export default function getInitials(displayName: string | null) {
+export function getInitials(displayName: string | null) {
   if (!displayName) return "AM";
   const trimmedName = displayName.trim();
   if (!trimmedName) {
