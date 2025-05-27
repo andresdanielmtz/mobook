@@ -1,5 +1,5 @@
 import { auth, db } from "@/config/firebase";
-import type { StoreUser } from "@/model/user";
+import type { StoreUser } from "@/model/User";
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
@@ -8,7 +8,7 @@ import {
   signOut,
   type User,
 } from "firebase/auth";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 
 const googleProvider = new GoogleAuthProvider();
 
@@ -83,6 +83,20 @@ export const getUserById = async (
     return;
   } catch (error) {
     console.error(`Error getting user: ${error}`);
+    return;
+  }
+};
+
+export const updateBioByUserID = async (
+  userId: string,
+  newBio: string,
+): Promise<void> => {
+  try {
+    await updateDoc(doc(db, "users", userId), {
+      bio: newBio,
+    });
+  } catch (error) {
+    console.error(`Error updating bio: ${error}`);
     return;
   }
 };

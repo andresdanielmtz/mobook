@@ -3,4 +3,5 @@ export interface StoreUser {
   email: string;
   displayName: string;
   createdAt: Date;
+  bio: string;
 }
