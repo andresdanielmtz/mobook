@@ -27,8 +27,7 @@ import {
 } from "./ui/dialog";
 import { Button } from "./ui/button";
 import { DialogTrigger } from "@radix-ui/react-dialog";
-import getInitials from "@/utils/avatar";
-import { StoreUser } from "@/model/User";
+import { type StoreUser } from "@/model/User";
 import { getUserById } from "@/services/authenticationServices";
 import getInitialsAdapter from "@/utils/avatar";
 
