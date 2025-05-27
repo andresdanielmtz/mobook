@@ -1,9 +1,10 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 import { auth } from "@/config/firebase";
 import { validateEmail } from "@/utils/email";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export const SignUpView: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -89,14 +90,19 @@ export const SignUpView: React.FC = () => {
             )}
           </div>
           <div className="flex items-center justify-between">
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            <Button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline max-w-md mt-1 mx-auto"
               type="submit"
             >
-              Sign Up
-            </button>
+              Sign In
+            </Button>
           </div>
         </form>
+      </div>
+      <div className="flex flex-col">
+        <Link to="/login" className="text-blue-500 text-center">
+          Already have an account? Sign In
+        </Link>
       </div>
     </div>
   );
