@@ -15,7 +15,6 @@ export default defineConfig({
     __APP_ENV__: process.env.VITE_VERCEL_ENV,
   },
   build: {
-    outDir: "./build",
     emptyOutDir: true, // also necessary
   },
   base: "https://andresdanielmtz.github.io/mobook",
