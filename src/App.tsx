@@ -1,11 +1,17 @@
+import { BrowserRouter } from "react-router-dom";
 import "./App.css";
 import AppRouter from "./Router";
 import Footer from "@/components/Footer.tsx";
+import { AuthProvider } from "./context/AuthContext";
 
 function App() {
   return (
     <>
-      <AppRouter />
+      <BrowserRouter basename="/mobook">
+        <AuthProvider>
+          <AppRouter />
+        </AuthProvider>
+      </BrowserRouter>
       <Footer />
     </>
   );

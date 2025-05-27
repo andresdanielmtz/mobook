@@ -1,4 +1,5 @@
 # Personal To-do List
 
-1. Add Login forms and authentication
-2. Document project structure
+1. Add Toastify for notifications. (Or ShadCN equivalent)
+2. Add Login forms and authentication
+3. Document project structure
