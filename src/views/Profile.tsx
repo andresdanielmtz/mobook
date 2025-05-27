@@ -69,9 +69,7 @@ export const ProfileView = () => {
   };
   return (
     <div>
-      <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mt-10">
-        Profile
-      </h1>
+      <h1 className="text-4xl font-bold text-center mt-10">Profile</h1>
       {userData ? (
         <div className="max-w-md mx-auto mt-10">
           <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 text-left">
