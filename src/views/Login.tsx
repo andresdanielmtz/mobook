@@ -1,12 +1,15 @@
+import { Button } from "@/components/ui/button";
 import { auth } from "@/config/firebase";
+import { signInWithGoogle } from "@/services/authenticationServices";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const LoginView = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
+
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
     try {
@@ -18,6 +21,15 @@ const LoginView = () => {
       console.log(`Error: ${e}`);
     }
   }
+
+  const handleGoogleLogin = async () => {
+    try {
+      await signInWithGoogle();
+      navigate("/");
+    } catch {
+      console.error("Google sign-in failed");
+    }
+  };
 
   return (
     <div>
@@ -59,18 +71,34 @@ const LoginView = () => {
           </div>
           <div className="flex items-center justify-between">
             <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline max-w-md mt-1 mx-auto"
               type="submit"
             >
               Sign In
             </button>
           </div>
+          <Button
+            variant="outline"
+            onClick={handleGoogleLogin}
+            className=" max-w-md mt-4 mx-auto"
+          >
+            <div className="flex items-center justify-center space-x-2">
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"
+                alt="Google logo"
+                className="w-5 h-5"
+              />
+              <span>Sign in with Google</span>
+            </div>
+          </Button>
         </form>
       </div>
-      <a onClick={() => navigate("/signup")}>
-        {" "}
-        Don't have an account? Let's create one!{" "}
-      </a>
+
+      <div className="flex flex-col">
+        <Link to="/signup" className="text-blue-500 text-center">
+          Don't have an account? Let's create one!
+        </Link>
+      </div>
     </div>
   );
 };
