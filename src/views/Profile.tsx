@@ -11,6 +11,7 @@ import {
 } from "@/services/authenticationServices";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { Pencil } from "@mynaui/icons-react";
 
 export const ProfileView = () => {
   const { userId } = useParams<{ userId: string }>();
@@ -74,38 +75,40 @@ export const ProfileView = () => {
       {userData ? (
         <div className="max-w-md mx-auto mt-10">
           <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 text-left">
-            <h2 className="text-xl font-bold mb-4 ">User Information</h2>
-            <p>
-              <b>Email:</b> {userData.email}
-            </p>
-            <p>
-              <b>Display Name:</b> {userData.displayName || "N/A"}
-            </p>
+            <h2 className="text-xl font-bold mb-4">User Information</h2>
+            <div className="mb-6">
+              <p>
+                <b>Email:</b> {userData.email}
+              </p>
+              <p>
+                <b>Display Name:</b> {userData.displayName || "N/A"}
+              </p>
+            </div>
+            <hr className="mb-6" />
+            // TODO: Add cancel button when editing bio.
             {isEditingBio ? (
-              <div>
+              <div className="mb-4">
                 <textarea
-                  className="w-full p-2 border rounded"
+                  className="w-full p-2 border rounded mb-2"
                   defaultValue={userData.bio || ""}
                   onChange={(e) => setEditingBioText(e.target.value)}
                 />
                 <Button
-                  className="mt-2 bg-blue-500 text-white px-4 py-2 rounded"
+                  className="bg-blue-500 text-white px-4 py-2 rounded"
                   onClick={handleEditingBio}
                 >
                   Save Bio
                 </Button>
               </div>
             ) : (
-              <div>
+              <div className="flex items-center">
                 <p>
                   <b>Bio:</b> {userData.bio || "No bio available"}
                 </p>
-                <Button
-                  className="mt-2 bg-blue-500 text-white px-4 py-2 rounded"
+                <Pencil
+                  className="ml-auto text-blue-500 cursor-pointer"
                   onClick={() => setIsEditingBio(true)}
-                >
-                  Edit Bio
-                </Button>
+                />
               </div>
             )}
           </div>

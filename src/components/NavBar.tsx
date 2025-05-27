@@ -27,6 +27,7 @@ import {
 } from "./ui/dialog";
 import { Button } from "./ui/button";
 import { DialogTrigger } from "@radix-ui/react-dialog";
+import getInitials from "@/utils/avatar";
 
 const Links: { title: string; url: string }[] = [
   {
@@ -163,10 +164,12 @@ const NavBar = () => {
               <NavigationMenuItem key="profile">
                 <Avatar
                   onClick={() => navigate(`/profile/${user?.uid}`)}
-                  className="justify-end ml-5"
+                  className="justify-end ml-5 transition transform duration-200 hover:scale-150"
                 >
                   <AvatarImage src="" />
-                  <AvatarFallback>{user?.displayName}</AvatarFallback>
+                  <AvatarFallback>
+                    {getInitials(user?.displayName)}
+                  </AvatarFallback>
                 </Avatar>
               </NavigationMenuItem>
               <NavigationMenuItem
@@ -175,7 +178,9 @@ const NavBar = () => {
                 className="ml-5"
               >
                 <DialogTrigger>
-                  <ListItem>Logout</ListItem>
+                  <ListItem className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                    Logout
+                  </ListItem>
                 </DialogTrigger>
               </NavigationMenuItem>
             </>
