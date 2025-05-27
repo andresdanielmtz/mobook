@@ -162,7 +162,7 @@ const NavBar = () => {
             <>
               <NavigationMenuItem key="profile">
                 <Avatar
-                  onClick={() => navigate("/profile")}
+                  onClick={() => navigate(`/profile/${user?.uid}`)}
                   className="justify-end ml-5"
                 >
                   <AvatarImage src="" />

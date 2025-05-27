@@ -72,6 +72,21 @@ export const logout = async () => {
   }
 };
 
+export const getUserById = async (
+  userId: string,
+): Promise<StoreUser | undefined> => {
+  try {
+    const userDoc = await getDoc(doc(db, "users", userId));
+    if (userDoc.exists()) {
+      return userDoc.data() as StoreUser;
+    }
+    return;
+  } catch (error) {
+    console.error(`Error getting user: ${error}`);
+    return;
+  }
+};
+
 export const getUserDisplayNames = async (userId: string): Promise<string> => {
   try {
     const userDoc = await getDoc(doc(db, "users", userId));
