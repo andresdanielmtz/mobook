@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
-import { auth } from "@/config/firebase";
-import { signInWithGoogle } from "@/services/authenticationServices";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import {
+  signInWithEmail,
+  signInWithGoogle,
+} from "@/services/authenticationServices";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -13,23 +14,23 @@ const LoginView = () => {
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
     try {
-      const resp = await signInWithEmailAndPassword(auth, email, password);
+      const resp = await signInWithEmail(email, password);
 
       navigate("/");
-      return resp.user.uid;
+      return resp.uid;
     } catch (e) {
       console.log(`Error: ${e}`);
     }
   }
 
-  const handleGoogleLogin = async () => {
+  async function handleGoogleLogin() {
     try {
       await signInWithGoogle();
       navigate("/");
     } catch {
       console.error("Google sign-in failed");
     }
-  };
+  }
 
   return (
     <div>
@@ -82,6 +83,8 @@ const LoginView = () => {
             onClick={handleGoogleLogin}
             className=" max-w-md mt-4 mx-auto"
           >
+            {/*Uses Google Logo.
+                      ?? Might be a good idea to get the logo from a proper icon website instead of hardcoding it from the internet.*/}
             <div className="flex items-center justify-center space-x-2">
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"

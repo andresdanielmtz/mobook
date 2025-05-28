@@ -12,6 +12,9 @@ import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 
 const googleProvider = new GoogleAuthProvider();
 
+// This function handles signing in with Google using Firebase Authentication.
+// It checks if the user already exists in the Firestore database and creates a new user document if not.
+
 export const signInWithGoogle = async () => {
   try {
     const result = await signInWithPopup(auth, googleProvider);

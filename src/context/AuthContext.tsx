@@ -1,5 +1,5 @@
-import { createContext, useState, useEffect, useContext } from "react";
-import { onAuthStateChanged, type User, signOut } from "firebase/auth";
+import { createContext, useContext, useEffect, useState } from "react";
+import { onAuthStateChanged, signOut, type User } from "firebase/auth";
 import { auth } from "../config/firebase";
 import { getUserDisplayNames } from "@/services/authenticationServices";
 
@@ -10,6 +10,10 @@ interface AuthContextType {
   logout: () => void;
 }
 
+// This context provides authentication state and methods to the application
+// Gives us the ability to access the current user, their display name, and a logout function
+
+// eslint-disable-next-line react-refresh/only-export-components
 export const AuthContext = createContext<AuthContextType>({
   user: null,
   logout: () => {},
@@ -37,6 +41,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   function logout() {
     signOut(auth);
   }
+
   return (
     <AuthContext.Provider value={{ user, logout, loading, displayName }}>
       {children}
@@ -44,4 +49,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
+// Custom hook to use the AuthContext in components
+
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => useContext(AuthContext);
