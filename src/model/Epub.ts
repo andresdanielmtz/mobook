@@ -1,4 +1,4 @@
 export interface Epub {
-    isAvailable:   boolean;
-    acsTokenLink?: string;
+  isAvailable: boolean;
+  acsTokenLink?: string;
 }

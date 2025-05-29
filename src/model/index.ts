@@ -1,6 +1,7 @@
 import { type Epub } from "./Epub.ts";
 
 // TODO: Separate this file into multiple files for better organization.
+// ?? Might be a (temporary) permanent solution to avoid circular dependencies.
 
 export interface Content {
   kind: string;
