@@ -4,7 +4,7 @@
  * */
 
 import { Button } from "@/components/ui/button";
-import { type StoreUser } from "@/model/User";
+import { type StoreUser } from "@/model/user";
 import {
   getUserById,
   updateBioByUserID,
