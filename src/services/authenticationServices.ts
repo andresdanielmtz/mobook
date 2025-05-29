@@ -1,5 +1,5 @@
 import { auth, db } from "@/config/firebase";
-import type { StoreUser } from "@/model/user";
+import type { StoreUser } from "@/model/User";
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,

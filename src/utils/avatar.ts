@@ -1,4 +1,4 @@
-import type { StoreUser } from "@/model/user";
+import type { StoreUser } from "@/model/User";
 
 // This function returns an initial depending on whether you have first and last name OR if you have the display name. :)
 
