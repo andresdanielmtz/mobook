@@ -31,6 +31,9 @@ import { type StoreUser } from "@/model/User";
 import { getUserById } from "@/services/authenticationServices";
 import getInitialsAdapter from "@/utils/avatar";
 
+// This file defines the navigation bar component for the application.
+// It includes links to different pages and a user profile avatar.
+// It also handles user logout functionality and displays a modal for confirmation.
 const Links: { title: string; url: string }[] = [
   {
     title: "Home",
@@ -46,12 +49,12 @@ const Links: { title: string; url: string }[] = [
   },
 ];
 
+// TODO: Add description when hovering over the list item.
+// ui.shadcn.com/docs/components/navigation-menu
+
 interface ListItemProps extends React.ComponentPropsWithoutRef<"a"> {
   url?: string;
 }
-
-// TODO: Add description when hovering over the list item.
-// ui.shadcn.com/docs/components/navigation-menu
 
 const ListItem = React.forwardRef<React.ComponentRef<"a">, ListItemProps>(
   ({ className, children, url, ...props }, ref) => {
