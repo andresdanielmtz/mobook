@@ -1,8 +1,12 @@
+import { type Item } from "@/model";
+
 /*
  * Book API Hooks
+ * VITE_BOOK_API_URL: string; <- Used for fetching all books
+ * VITE_BOOK_API_URL2: string; <- Used for fetching books by ID or query
  */
 
-import { type Item } from "@/model";
+// Fetches all books from the Book API.
 
 export async function getBooks(): Promise<Item[]> {
   const response = await fetch(import.meta.env.VITE_BOOK_API_URL);
@@ -13,6 +17,8 @@ export async function getBooks(): Promise<Item[]> {
 
   return data.items;
 }
+
+// Fetches a book by its ID from the Book API.
 
 export async function getBooksById(id: string): Promise<Item> {
   const response = await fetch(
@@ -25,6 +31,8 @@ export async function getBooksById(id: string): Promise<Item> {
 
   return data;
 }
+
+// Fetches books based on a search query from the Book API.
 
 export async function getBooksByQuery(query: string): Promise<Item[]> {
   const response = await fetch(

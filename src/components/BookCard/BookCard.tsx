@@ -8,11 +8,14 @@ interface ICard {
   id: string;
 }
 
+// This file defines the BookCard component for displaying book information.
+// It includes properties for the book's image links, title, and ID.
+
 const BookCard = ({ imageLinks, title, id }: ICard) => {
   const navigate = useNavigate();
-
   return (
     <div
+      key={id}
       tabIndex={0}
       className="aspect-3-4 sm:max-w-xs rounded-lg overflow-hidden relative group focus:outline-none cursor-pointer my-5 shadow hover:shadow-lg transition-shadow duration-300 bg-white flex flex-col"
       onClick={() => navigate(`/books/${id}`)}
