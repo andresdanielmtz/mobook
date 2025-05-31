@@ -69,7 +69,6 @@ export const ProfileView = () => {
   };
   return (
     <div>
-      <h1 className="text-4xl font-bold text-center mt-10">Profile</h1>
       {userData ? (
         <div className="max-w-md mx-auto mt-10">
           <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 text-left">
@@ -107,7 +106,7 @@ export const ProfileView = () => {
                   className="bg-blue-500 text-white px-4 py-2 rounded"
                   onClick={handleEditingBio}
                 >
-                  Save Bio
+                  Save
                 </Button>
               </div>
             ) : (

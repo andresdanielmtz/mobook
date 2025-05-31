@@ -2,6 +2,8 @@ import type { ImageLinks } from "@/model";
 import "./BookCard.css";
 import { useNavigate } from "react-router-dom";
 
+// BookCard Component used to display a book's information in a card format.
+
 interface ICard {
   imageLinks?: ImageLinks;
   title: string;

@@ -5,6 +5,7 @@ import {
 } from "@/services/authenticationServices";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const LoginView = () => {
   const [email, setEmail] = useState<string>("");
@@ -15,8 +16,9 @@ const LoginView = () => {
     e.preventDefault();
     try {
       const resp = await signInWithEmail(email, password);
-
       navigate("/");
+      toast.success("Login successful");
+
       return resp.uid;
     } catch (e) {
       console.log(`Error: ${e}`);
@@ -27,6 +29,7 @@ const LoginView = () => {
     try {
       await signInWithGoogle();
       navigate("/");
+      toast.success("Login successful");
     } catch {
       console.error("Google sign-in failed");
     }
@@ -66,7 +69,7 @@ const LoginView = () => {
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
               id="password"
               type="password"
-              placeholder="******************"
+              placeholder="*******"
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>

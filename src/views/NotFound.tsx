@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+
 // Not Found View
 // This view is used to show a 404 error when the user tries to access a page that does not exist.
 
