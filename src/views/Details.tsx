@@ -48,7 +48,8 @@ const DetailsView = () => {
     );
   }
 
-  // Return error state
+  // Return error and no data states
+
   if (error) {
     return <div>Error: {error.message}</div>;
   }

@@ -8,6 +8,7 @@ import DetailsView from "./views/Details";
 import LoginView from "./views/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import SignUpView from "./views/Signup";
+import NotFoundView from "@/views/NotFound.tsx";
 
 const AppRouter: React.FC = () => {
   return (
@@ -34,8 +35,7 @@ const AppRouter: React.FC = () => {
         <Route path="/books/:id" element={<DetailsView />}></Route>
         <Route path="/login" element={<LoginView />}></Route>
         <Route path="/signup" element={<SignUpView />}></Route>
-
-        <Route path="*" element={<div>404 Not Found</div>} />
+        <Route path="*" element={<NotFoundView />} />
       </Routes>
     </>
   );
