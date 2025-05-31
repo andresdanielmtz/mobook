@@ -11,7 +11,14 @@ function App() {
       <BrowserRouter>
         <AuthProvider>
           <AppRouter />
-          <ToastContainer position="bottom-right" />
+          <ToastContainer
+            position="bottom-right"
+            autoClose={1000}
+            closeOnClick
+            theme="colored"
+            hideProgressBar
+            draggable
+          />
         </AuthProvider>
       </BrowserRouter>
       <Footer />
