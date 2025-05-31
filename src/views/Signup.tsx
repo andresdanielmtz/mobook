@@ -4,6 +4,7 @@ import { registerWithEmailAndPassword } from "@/services/authenticationServices"
 import { validateEmail } from "@/utils/email";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export const SignUpView: React.FC = () => {
   const [firstName, setFirstName] = useState<string>("");
@@ -34,8 +35,10 @@ export const SignUpView: React.FC = () => {
 
       // If the user is created successfully, we can redirect them to the home page
       navigate("/");
+      toast.success("Sign up successfully");
     } catch (e) {
       console.error(e);
+      toast.error("Could not sign up. Please try again.");
     }
   }
 

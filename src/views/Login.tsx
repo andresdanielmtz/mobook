@@ -22,6 +22,9 @@ const LoginView = () => {
       return resp.uid;
     } catch (e) {
       console.log(`Error: ${e}`);
+      toast.error(
+        "Could not log in. Please check your credentials and try again.",
+      );
     }
   }
 
@@ -32,6 +35,7 @@ const LoginView = () => {
       toast.success("Login successful");
     } catch {
       console.error("Google sign-in failed");
+      toast.error("Google sign-in failed. Please try again.");
     }
   }
 
