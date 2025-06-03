@@ -33,12 +33,12 @@ export const HomeView: React.FC = () => {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-      {bookData.map((item) => (
+      {bookData.map((book) => (
         <BookCard
-          key={item.id}
-          imageLinks={item.volumeInfo.imageLinks}
-          title={item.volumeInfo.title}
-          id={item.id}
+          key={book.id}
+          imageLinks={book.volumeInfo.imageLinks}
+          title={book.volumeInfo.title}
+          id={book.id}
         />
       ))}
     </div>

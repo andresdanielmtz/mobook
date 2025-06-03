@@ -6,6 +6,7 @@ import {
   doc,
   getDocs,
   query,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { type IReview } from "@/model/Reviews";
@@ -91,6 +92,20 @@ export const deleteReview = async (reviewId: string) => {
     await deleteDoc(doc(reviewsCollection, reviewId));
   } catch (error) {
     console.error("Error adding book to user's wihlist", error);
+    throw error;
+  }
+};
+
+// TODO: Implement this properly.
+
+export const updateReview = async (newMessage: string, reviewId: string) => {
+  try {
+    const reviewsCollection = collection(db, "reviews");
+    await updateDoc(doc(reviewsCollection, reviewId), {
+      comment: newMessage,
+    });
+  } catch (error) {
+    console.error("Error while trying to update review", error);
     throw error;
   }
 };

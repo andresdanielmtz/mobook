@@ -3,6 +3,7 @@
 // 2. Books the user wants to read (pending list)
 // 3. Books the user wants to buy (wishlist)
 
+import { getBooksById } from "@/api/getBooks";
 import { db } from "@/config/firebase";
 import type { Item } from "@/model";
 import {
@@ -17,29 +18,54 @@ import {
   type DocumentData,
 } from "firebase/firestore";
 
-export const getUserWishlist = async (userId: string) => {
+// Though it is necessary to add/remove elements to the wishlist of a specific user. It is not necessary to "update" them, so to speak.
+// This is just a normalized table so the "content" of the elements does not really matter as it is just connections between two different tables. :)
+
+export const getUserWishlist = async (userId: string): Promise<Item[]> => {
   try {
     const wishlistCollection = collection(db, "wishlistBooks");
     const q = query(wishlistCollection, where("userId", "==", userId));
     const querySnapshot = await getDocs(q);
+
     const books: Item[] = [];
 
-    querySnapshot.forEach((doc) => {
-      books.push({
-        id: doc.id,
-        ...doc.data(),
-        kind: doc.data().kind || "",
-        etag: doc.data().etag || "",
-        selfLink: doc.data().selfLink || "",
-        volumeInfo: doc.data().volumeInfo || undefined,
-        saleInfo: doc.data().saleInfo || undefined,
-        accessInfo: doc.data().accessInfo || undefined,
-      });
-    });
+    // Fetch each book by its bookId
+    for (const docSnap of querySnapshot.docs) {
+      const { bookId } = docSnap.data();
+      if (!bookId) continue;
+      try {
+        const book = await getBooksById(bookId);
+        if (book) {
+          books.push(book);
+        }
+      } catch (err) {
+        console.warn(`Book with id ${bookId} not found or error fetching.`);
+        console.error(err);
+      }
+    }
 
     return books;
   } catch (error) {
     console.error("Error fetching user's wishlist", error);
+    throw error;
+  }
+};
+
+export const checkIfBookInWishlist = async (
+  bookId: string,
+  userId: string,
+): Promise<boolean> => {
+  try {
+    const wishlistCollection = collection(db, "wishlistBooks");
+    const q = query(
+      wishlistCollection,
+      where("userId", "==", userId),
+      where("bookId", "==", bookId),
+    );
+    const querySnapshot = await getDocs(q);
+    return !querySnapshot.empty;
+  } catch (error) {
+    console.error("Error checking if book is in user's wishlist", error);
     throw error;
   }
 };

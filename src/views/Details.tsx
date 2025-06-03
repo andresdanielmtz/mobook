@@ -2,28 +2,39 @@ import { getBooksById } from "@/api/getBooks";
 import { Button } from "@/components/ui/button";
 import { LoadingSpinner } from "@/components/ui/loading";
 import type { Item } from "@/model";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Markup } from "interweave";
 import Reviews from "@/components/Reviews/Reviews";
+import { AuthContext } from "@/context/AuthContext";
+import {
+  addBookToUserWishlist,
+  checkIfBookInWishlist,
+} from "@/services/userWishlistServices";
 
 // Show specific book details by ID
 
 const DetailsView = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id: bookId } = useParams<{ id: string }>();
+  const { user } = useContext(AuthContext);
+
   const [data, setData] = React.useState<Item | null>(null);
   const [loading, setLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<Error | null>(null);
+  const [bookInWishlist, setBookWishlistState] = useState<boolean>(false);
+  const [wishlistLoading, setWishlistLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    if (!id) {
+    if (!bookId) {
       console.error("ID is undefined");
       return;
     }
     const fetchData = async () => {
-      console.log(`Complete URL: ${import.meta.env.VITE_BOOK_API_URL2}/${id}`);
+      console.log(
+        `Complete URL: ${import.meta.env.VITE_BOOK_API_URL2}/${bookId}`,
+      );
       try {
-        const response = await getBooksById(id);
+        const response = await getBooksById(bookId);
 
         setData(response);
       } catch (error: unknown) {
@@ -34,8 +45,35 @@ const DetailsView = () => {
       }
     };
     fetchData();
-  }, [id]);
+  }, [bookId, bookInWishlist, user]);
 
+  useEffect(() => {
+    if (!bookId || !user) return;
+    const checkWishlist = async () => {
+      try {
+        const isInWishlist = await checkIfBookInWishlist(bookId, user.uid);
+        setBookWishlistState(!!isInWishlist);
+      } catch (error) {
+        console.error("Error checking wishlist:", error);
+      }
+    };
+    checkWishlist();
+  }, [bookId, user]);
+
+  const handleAddToWishlist = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user || !bookId) return;
+    setWishlistLoading(true);
+
+    try {
+      await addBookToUserWishlist(bookId, user.uid);
+      setBookWishlistState(true); // Immediately update state
+    } catch (error) {
+      console.error("Error adding book to wishlist.", error);
+    } finally {
+      setWishlistLoading(false);
+    }
+  };
   const navigate = useNavigate();
   const handleBack = () => {
     navigate(-1); // Go back to the previous page
@@ -123,11 +161,22 @@ const DetailsView = () => {
         </div>
       </div>
 
+      <Button
+        onClick={handleAddToWishlist}
+        disabled={bookInWishlist || wishlistLoading}
+      >
+        {bookInWishlist
+          ? "In Wishlist"
+          : wishlistLoading
+            ? "Adding..."
+            : "Add to Wishlist"}
+      </Button>
+
       {/**
        * Reviews Section
        */}
 
-      {id && <Reviews bookId={id} />}
+      {bookId && <Reviews bookId={bookId} />}
     </div>
   );
 };

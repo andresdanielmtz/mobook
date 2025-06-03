@@ -12,6 +12,9 @@ import {
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Pencil } from "@mynaui/icons-react";
+import type { Item } from "@/model";
+import { getUserWishlist } from "@/services/userWishlistServices";
+import BookCard from "@/components/BookCard/BookCard";
 
 export const ProfileView = () => {
   const { userId } = useParams<{ userId: string }>();
@@ -20,6 +23,22 @@ export const ProfileView = () => {
   const [editingBioText, setEditingBioText] = useState<string>(
     userData?.bio || "",
   );
+  const [wishlistBooks, setWishlistBooks] = useState<Item[]>([]);
+
+  useEffect(() => {
+    const fetchWishlistBooks = async () => {
+      if (!userId) return;
+
+      const response = await getUserWishlist(userId);
+      if (!response || response.length === 0) {
+        console.warn("No books found in the user's wishlist.");
+        return;
+      }
+      console.log("Fetched wishlist books:", response);
+      setWishlistBooks(response);
+    };
+    fetchWishlistBooks();
+  }, [userId]);
 
   useEffect(() => {
     console.log(`Fetching data for user with ID: ${userId}`);
@@ -124,6 +143,29 @@ export const ProfileView = () => {
         </div>
       ) : (
         <p className="text-center">Loading user data...</p>
+      )}
+
+      {/** Wishlist Section */}
+      {wishlistBooks.length > 0 && (
+        <div className="max-w-md mx-auto mt-10">
+          <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 text-left">
+            <h2 className="text-xl font-bold mb-4">Wishlist</h2>
+            <div className="grid grid-cols-3 gap-4">
+              {wishlistBooks
+                .sort((a, b) =>
+                  a.volumeInfo.title.localeCompare(b.volumeInfo.title),
+                )
+                .map((book) => (
+                  <BookCard
+                    key={book.id}
+                    imageLinks={book.volumeInfo.imageLinks}
+                    title={book.volumeInfo.title}
+                    id={book.id}
+                  />
+                ))}
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
