@@ -5,6 +5,9 @@ import type { Item } from "@/model";
 import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Markup } from "interweave";
+import type { IReview } from "@/model/Reviews";
+import { addReview, getReviewsByBookId } from "@/services/reviewsServices";
+import { Input } from "@/components/ui/input";
 
 // Show specific book details by ID
 
@@ -13,6 +16,64 @@ const DetailsView = () => {
   const [data, setData] = React.useState<Item | null>(null);
   const [loading, setLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<Error | null>(null);
+  const [reviews, setReviews] = React.useState<IReview[]>([]);
+  const [reviewMessage, setReviewMessage] = React.useState<string>("");
+
+  const fetchData = async (id: string) => {
+    try {
+      const response = await getReviewsByBookId(id);
+      if (response) {
+        setReviews(response);
+      } else {
+        console.error("No reviews found for this book.");
+        setReviews([]);
+      }
+      console.error(`Fetched reviews for book ID ${id}:`, response);
+    } catch (error) {
+      console.error("Error fetching reviews:", error);
+      setError(error as Error);
+      setReviews([]); // Reset reviews on error
+    }
+  };
+
+  useEffect(() => {
+    if (!id) {
+      console.error("ID is undefined");
+      return;
+    }
+
+    fetchData(id).catch((error) => {
+      console.error("Error fetching reviews:", error);
+      setError(error as Error);
+    });
+  }, [id]);
+
+  const handleReviewSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!id) {
+      console.error("ID is undefined, cannot submit review");
+      return;
+    }
+    if (reviewMessage.trim()) {
+      try {
+        await addReview({
+          bookId: id,
+          userId: "anonymous", // Replace with actual user ID if available
+          rating: 5, // Default rating, can be modified
+          comment: reviewMessage,
+          createdAt: new Date(),
+        });
+        console.log("Review submitted:", reviewMessage);
+        setReviewMessage(""); // Clear the input after submission
+        await fetchData(id); // Refresh reviews after submission
+      } catch (error) {
+        console.error("Error submitting review:", error);
+        setError(error as Error);
+      }
+    } else {
+      console.error("Review message cannot be empty");
+    }
+  };
 
   useEffect(() => {
     if (!id) {
@@ -121,6 +182,53 @@ const DetailsView = () => {
           </div>
         </div>
       </div>
+
+      {/**
+       * Reviews Section
+       */}
+
+      <div>
+        <form className="container mx-auto p-6">
+          <Input
+            type="text"
+            placeholder="Add your review..."
+            className="w-full max-w-md mx-auto my-6"
+            onChange={(e) => setReviewMessage(e.target.value)}
+            value={reviewMessage}
+          />
+          <Button
+            className="w-full max-w-md mx-auto my-2"
+            onClick={handleReviewSubmit}
+          >
+            Submit Review
+          </Button>
+        </form>
+      </div>
+
+      {reviews.length > 0 ? (
+        <div className="container mx-auto p-6">
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">Reviews</h2>
+          <div className="space-y-4">
+            {reviews.map((review) => (
+              <div
+                key={review.id}
+                className="p-4 border rounded shadow-sm bg-white"
+              >
+                <h3 className="text-lg font-semibold text-gray-800">
+                  {review.userId} - {review.rating} Stars
+                </h3>
+                <p className="text-gray-600">{review.comment}</p>
+                <p className="text-sm text-gray-500">
+                  Reviewed on:{" "}
+                  {new Date(review.createdAt!).toLocaleDateString()}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div> No comments found for this. </div>
+      )}
     </div>
   );
 };
