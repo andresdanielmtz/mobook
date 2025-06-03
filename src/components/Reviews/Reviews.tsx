@@ -1,12 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import { type IReview } from "@/model/Reviews";
 import { addReview, getReviewsByBookId } from "@/services/reviewsServices";
-import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { AuthContext } from "@/context/AuthContext";
 import { getName } from "@/utils/avatar";
 import type { IUser } from "@/model/User";
 import { getUserById } from "@/services/authenticationServices";
+import { Star } from "lucide-react";
+import StarRating from "../StarRating";
 
 interface ReviewsProps {
   bookId: string;
@@ -17,8 +18,10 @@ const Reviews = ({ bookId }: ReviewsProps) => {
 
   const [reviews, setReviews] = useState<IReview[]>([]);
   const [reviewMessage, setReviewMessage] = useState<string>("");
+  const [rating, setRating] = useState<number>(5);
   const [error, setError] = useState<Error | null>(null);
   const [userData, setUserData] = useState<IUser>();
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   useEffect(() => {
     if (!user) return;
     getUserById(user.uid).then((payload) => {
@@ -63,14 +66,14 @@ const Reviews = ({ bookId }: ReviewsProps) => {
 
         await addReview({
           bookId: bookId,
-          userId: getName(userData), // Replace with actual user ID if available
-          rating: 5, // Default rating, can be modified
+          userId: getName(userData),
+          rating,
           comment: reviewMessage,
           createdAt: new Date(),
         });
-        console.log("Review submitted:", reviewMessage);
-        setReviewMessage(""); // Clear the input after submission
-        await fetchData(bookId); // Refresh reviews after submission
+        setReviewMessage("");
+        setRating(5);
+        await fetchData(bookId);
       } catch (error) {
         console.error("Error submitting review:", error);
         setError(error as Error);
@@ -80,62 +83,98 @@ const Reviews = ({ bookId }: ReviewsProps) => {
     }
   };
 
-  useEffect(() => {
-    if (bookId) {
-      fetchData(bookId).catch((error) => {
-        console.error("Error fetching reviews:", error);
-        setError(error as Error);
-      });
-    }
-  }, [bookId]);
-
   if (error) {
     return <div>Error fetching reviews: {error.message}</div>;
   }
 
   return (
     <div>
-      <div>
-        <form className="container mx-auto p-6">
-          <Input
-            type="text"
-            placeholder="Add your review..."
-            className="w-full max-w-md mx-auto my-6"
-            onChange={(e) => setReviewMessage(e.target.value)}
-            value={reviewMessage}
-          />
-          <Button
-            className="w-full max-w-md mx-auto my-2"
-            onClick={handleReviewSubmit}
-          >
-            Submit Review
-          </Button>
-        </form>
-      </div>
+      <form
+        className="container mx-auto p-4 flex flex-col items-center gap-2"
+        onSubmit={handleReviewSubmit}
+      >
+        <StarRating value={rating} onChange={setRating} />
+        <textarea
+          placeholder="Add your review..."
+          className="w-full max-w-md min-h-[80px] max-h-48 p-2 border rounded resize-y"
+          onChange={(e) => setReviewMessage(e.target.value)}
+          value={reviewMessage}
+        />
+        <Button className="w-full max-w-md" type="submit">
+          Submit Review
+        </Button>
+      </form>
 
       {reviews.length > 0 ? (
-        <div className="container mx-auto p-6">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">Reviews</h2>
-          <div className="space-y-4">
-            {reviews.map((review) => (
-              <div
-                key={review.id}
-                className="p-4 border rounded shadow-sm bg-white"
-              >
-                <h3 className="text-lg font-semibold text-gray-800">
-                  {review.userId} - {review.rating} Stars
-                </h3>
-                <p className="text-gray-600">{review.comment}</p>
-                <p className="text-sm text-gray-500">
-                  Reviewed on:{" "}
-                  {new Date(review.createdAt!).toLocaleDateString()}
-                </p>
-              </div>
-            ))}
+        <div className="container mx-auto p-4">
+          <h2 className="text-xl font-bold text-gray-800 mb-4">Reviews</h2>
+          <div className="space-y-2">
+            {[...reviews]
+              .sort(
+                (a, b) =>
+                  new Date(b.createdAt).getTime() -
+                  new Date(a.createdAt).getTime(),
+              )
+              .map((review) => {
+                if (!review.id) return;
+
+                const isExpanded = expanded[review.id];
+                const maxLength = 120;
+                const shouldTruncate = review.comment.length > maxLength;
+                const displayComment =
+                  !shouldTruncate || isExpanded
+                    ? review.comment
+                    : review.comment.slice(0, maxLength) + "…";
+                return (
+                  <div
+                    key={review.id}
+                    className="grid grid-cols-[120px_80px_1fr_90px] items-start gap-2 p-2 border rounded bg-white shadow-sm text-sm"
+                  >
+                    <span className="font-semibold text-gray-700 truncate col-span-1 text-left">
+                      {review.userId}
+                    </span>
+                    <span className="flex items-center gap-0.5 col-span-1 justify-start">
+                      {Array.from({ length: 5 }, (_, i) => (
+                        <Star
+                          key={i}
+                          size={16}
+                          fill={i < review.rating ? "#facc15" : "none"}
+                          stroke={i < review.rating ? "#facc15" : "#d1d5db"}
+                        />
+                      ))}
+                    </span>
+                    <span className="flex-1 text-gray-600 col-span-1 text-left break-words">
+                      {displayComment}
+                      {shouldTruncate && (
+                        <button
+                          type="button"
+                          className="ml-2 text-blue-500 underline text-xs"
+                          onClick={() => {
+                            if (!review.id) return;
+                            setExpanded((prev) => ({
+                              ...prev,
+                              [String(review.id)]: !isExpanded,
+                            }));
+                          }}
+                        >
+                          {isExpanded ? "less" : "more"}
+                        </button>
+                      )}
+                    </span>
+                    <span className="text-xs text-gray-400 text-right col-span-1">
+                      {review.createdAt
+                        ? new Date(review.createdAt).toLocaleDateString()
+                        : ""}
+                    </span>
+                  </div>
+                );
+              })}
           </div>
         </div>
       ) : (
-        <div> No comments found for this. </div>
+        <div className="text-center text-gray-500 mt-4">
+          No comments found for this.
+        </div>
       )}
     </div>
   );
