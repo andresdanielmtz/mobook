@@ -15,7 +15,10 @@ import {
   addBookToUserPendingList,
   checkIfBookInPendingList,
 } from "@/services/pendingBooksServices";
-import { checkIfBookInReadList } from "@/services/readingBooksServices";
+import {
+  addBookToUserReadList,
+  checkIfBookInReadList,
+} from "@/services/readingBooksServices";
 
 // Show specific book details by ID
 
@@ -101,7 +104,7 @@ const DetailsView = () => {
 
     try {
       await addBookToUserPendingList(bookId, user.uid);
-      setPendingLoading(true); // Immediately update state
+      setBookPendingListState(true); // Immediately update state
     } catch (error) {
       console.error("Error adding book to pending list.", error);
     } finally {
@@ -115,8 +118,8 @@ const DetailsView = () => {
     setReadLoading(true);
 
     try {
-      await addBookToUserPendingList(bookId, user.uid);
-      setReadLoading(true); // Immediately update state
+      await addBookToUserReadList(bookId, user.uid);
+      setBookReadListState(true); // Immediately update state
     } catch (error) {
       console.error("Error adding book to read list.", error);
     } finally {
@@ -225,16 +228,40 @@ const DetailsView = () => {
         </div>
       </div>
 
-      <Button
-        onClick={handleAddToWishlist}
-        disabled={bookInWishlist || wishlistLoading}
-      >
-        {bookInWishlist
-          ? "In Wishlist"
-          : wishlistLoading
-            ? "Adding..."
-            : "Add to Wishlist"}
-      </Button>
+      <div className="flex flex-row gap-4 mb-4">
+        <Button
+          onClick={handleAddToWishlist}
+          disabled={bookInWishlist || wishlistLoading}
+        >
+          {bookInWishlist
+            ? "In Wishlist"
+            : wishlistLoading
+              ? "Adding..."
+              : "Add to Wishlist"}
+        </Button>
+
+        <Button
+          onClick={handleAddToPendingList}
+          disabled={bookInPendingList || pendingLoading}
+        >
+          {bookInPendingList
+            ? "In Pending List"
+            : pendingLoading
+              ? "Adding..."
+              : "Add to Pending List"}
+        </Button>
+
+        <Button
+          onClick={handleAddToReadList}
+          disabled={bookInReadList || readLoading}
+        >
+          {bookInReadList
+            ? "In Read List"
+            : readLoading
+              ? "Adding..."
+              : "Add to Read List"}
+        </Button>
+      </div>
 
       {/**
        * Reviews Section

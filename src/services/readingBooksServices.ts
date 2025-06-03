@@ -49,9 +49,9 @@ export const checkIfBookInReadList = async (
   userId: string,
 ): Promise<boolean> => {
   try {
-    const wishlistCollection = collection(db, "readingBooks");
+    const readlistsCollection = collection(db, "readingBooks");
     const q = query(
-      wishlistCollection,
+      readlistsCollection,
       where("userId", "==", userId),
       where("bookId", "==", bookId),
     );
