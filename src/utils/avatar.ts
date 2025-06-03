@@ -16,6 +16,16 @@ export default function getInitialsAdapter(user: IUser): string {
   return "";
 }
 
+export function getName(user: IUser): string {
+  if (user.firstName && user.lastName) {
+    return `${user.firstName} ${user.lastName}`;
+  } else if (user.displayName) {
+    return user.displayName;
+  }
+
+  return "";
+}
+
 // Returns the initials of a given displayName. It is supposed to have at least one valid word for it to work.
 
 export function getInitials(displayName: string | null) {

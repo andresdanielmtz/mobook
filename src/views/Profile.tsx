@@ -12,6 +12,11 @@ import {
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Pencil } from "@mynaui/icons-react";
+import type { Item } from "@/model";
+import { getUserWishlist } from "@/services/wishlistBooksServices";
+import BookShelf from "@/components/BookShelf";
+import { getUserPendingList } from "@/services/pendingBooksServices";
+import { getUserReadList } from "@/services/readingBooksServices";
 
 export const ProfileView = () => {
   const { userId } = useParams<{ userId: string }>();
@@ -20,6 +25,50 @@ export const ProfileView = () => {
   const [editingBioText, setEditingBioText] = useState<string>(
     userData?.bio || "",
   );
+  const [wishlistBooks, setWishlistBooks] = useState<Item[]>([]);
+  const [readBooks, setReadBooks] = useState<Item[]>([]);
+  const [pendingBooks, setPendingBooks] = useState<Item[]>([]);
+
+  useEffect(() => {
+    const fetchWishlistBooks = async () => {
+      if (!userId) return;
+
+      const response = await getUserWishlist(userId);
+      if (!response || response.length === 0) {
+        console.warn("No books found in the user's wishlist.");
+        return;
+      }
+      console.log("Fetched wishlist books:", response);
+      setWishlistBooks(response);
+    };
+    const fetchReadBooks = async () => {
+      if (!userId) return;
+
+      const response = await getUserReadList(userId);
+      if (!response || response.length === 0) {
+        console.warn("No books found in the user's read list.");
+        return;
+      }
+      console.log("Fetched read books:", response);
+      setReadBooks(response);
+    };
+
+    const fetchPendingBooks = async () => {
+      if (!userId) return;
+
+      const response = await getUserPendingList(userId);
+      if (!response || response.length === 0) {
+        console.warn("No books found in the user's pending list.");
+        return;
+      }
+      console.log("Fetched pending books:", response);
+      setPendingBooks(response);
+    };
+
+    fetchWishlistBooks();
+    fetchReadBooks();
+    fetchPendingBooks();
+  }, [userId]);
 
   useEffect(() => {
     console.log(`Fetching data for user with ID: ${userId}`);
@@ -125,6 +174,13 @@ export const ProfileView = () => {
       ) : (
         <p className="text-center">Loading user data...</p>
       )}
+
+      {/** Shelves displayed in a row */}
+      <div className="flex flex-row flex-wrap justify-center space-x-4">
+        <BookShelf books={wishlistBooks} title="Wishlist Books" />
+        <BookShelf books={readBooks} title="Read Books" />
+        <BookShelf books={pendingBooks} title="Pending Books" />
+      </div>
     </div>
   );
 };
