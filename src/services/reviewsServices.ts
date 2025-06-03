@@ -1,5 +1,13 @@
 import { db } from "../config/firebase";
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import { type IReview } from "@/model/Reviews";
 
 export const getReviews = async () => {
@@ -73,6 +81,16 @@ export const addReview = async (review: IReview) => {
     return { ...review, id: newReviewRef.id };
   } catch (error) {
     console.error("Error adding review:", error);
+    throw error;
+  }
+};
+
+export const deleteReview = async (reviewId: string) => {
+  try {
+    const reviewsCollection = collection(db, "reviews");
+    await deleteDoc(doc(reviewsCollection, reviewId));
+  } catch (error) {
+    console.error("Error adding book to user's wihlist", error);
     throw error;
   }
 };

@@ -1,6 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import { type IReview } from "@/model/Reviews";
-import { addReview, getReviewsByBookId } from "@/services/reviewsServices";
+import {
+  addReview,
+  deleteReview,
+  getReviewsByBookId,
+} from "@/services/reviewsServices";
 import { Button } from "../ui/button";
 import { AuthContext } from "@/context/AuthContext";
 import { getName } from "@/utils/avatar";
@@ -53,6 +57,19 @@ const Reviews = ({ bookId }: ReviewsProps) => {
       setError(error as Error);
     });
   }, [bookId]);
+
+  const handleDelete = async (reviewId: string) => {
+    if (!window.confirm("Are you sure youi want to delete this review?"))
+      return;
+
+    try {
+      await deleteReview(reviewId);
+      await fetchData(bookId);
+    } catch (error) {
+      alert("Failed to delete review.:(");
+      console.error(error);
+    }
+  };
 
   const handleReviewSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -125,6 +142,8 @@ const Reviews = ({ bookId }: ReviewsProps) => {
                   !shouldTruncate || isExpanded
                     ? review.comment
                     : review.comment.slice(0, maxLength) + "…";
+
+                const isOwn = userData && getName(userData) === review.userId;
                 return (
                   <div
                     key={review.id}
@@ -161,10 +180,19 @@ const Reviews = ({ bookId }: ReviewsProps) => {
                         </button>
                       )}
                     </span>
-                    <span className="text-xs text-gray-400 text-right col-span-1">
+                    <span className="text-xs text-gray-400 text-right col-span-1 flex flex-col items-end gap-1">
                       {review.createdAt
                         ? new Date(review.createdAt).toLocaleDateString()
                         : ""}
+                      {isOwn && (
+                        <button
+                          className="text-red-500 underline text-xs mt-1"
+                          onClick={() => handleDelete(review.id!)}
+                          type="button"
+                        >
+                          Delete
+                        </button>
+                      )}
                     </span>
                   </div>
                 );
