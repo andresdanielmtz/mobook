@@ -39,6 +39,7 @@ export const ProfileView = () => {
       console.log("Fetched wishlist books:", response);
       setWishlistBooks(response);
     };
+
     fetchWishlistBooks();
   }, [userId]);
 
