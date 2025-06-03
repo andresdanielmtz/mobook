@@ -27,7 +27,7 @@ import {
 } from "./ui/dialog";
 import { Button } from "./ui/button";
 import { DialogTrigger } from "@radix-ui/react-dialog";
-import { type StoreUser } from "@/model/User";
+import { type IUser } from "@/model/User";
 import { getUserById } from "@/services/authenticationServices";
 import getInitialsAdapter from "@/utils/avatar";
 
@@ -124,7 +124,7 @@ const NavBar = () => {
   const navigate = useNavigate();
   const { logout, user } = useContext(AuthContext);
   const [showLogoutModal, setShowLogoutModal] = React.useState<boolean>(false);
-  const [userData, setUserData] = useState<StoreUser>();
+  const [userData, setUserData] = useState<IUser>();
 
   useEffect(() => {
     if (!user) return;

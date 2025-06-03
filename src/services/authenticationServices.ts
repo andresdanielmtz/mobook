@@ -1,5 +1,5 @@
 import { auth, db } from "@/config/firebase";
-import type { StoreUser } from "@/model/User";
+import type { IUser } from "@/model/User";
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
@@ -79,11 +79,11 @@ export const logout = async () => {
 
 export const getUserById = async (
   userId: string,
-): Promise<StoreUser | undefined> => {
+): Promise<IUser | undefined> => {
   try {
     const userDoc = await getDoc(doc(db, "users", userId));
     if (userDoc.exists()) {
-      return userDoc.data() as StoreUser;
+      return userDoc.data() as IUser;
     }
     return;
   } catch (error) {
@@ -110,7 +110,7 @@ export const getUserDisplayNames = async (userId: string): Promise<string> => {
   try {
     const userDoc = await getDoc(doc(db, "users", userId));
     if (userDoc.exists()) {
-      return (userDoc.data() as StoreUser).displayName || "";
+      return (userDoc.data() as IUser).displayName || "";
     }
     return "";
   } catch (error) {

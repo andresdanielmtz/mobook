@@ -4,7 +4,7 @@
  * */
 
 import { Button } from "@/components/ui/button";
-import { type StoreUser } from "@/model/User";
+import { type IUser } from "@/model/User";
 import {
   getUserById,
   updateBioByUserID,
@@ -15,7 +15,7 @@ import { Pencil } from "@mynaui/icons-react";
 
 export const ProfileView = () => {
   const { userId } = useParams<{ userId: string }>();
-  const [userData, setUserData] = useState<StoreUser>();
+  const [userData, setUserData] = useState<IUser>();
   const [isEditingBio, setIsEditingBio] = useState<boolean>(false);
   const [editingBioText, setEditingBioText] = useState<string>(
     userData?.bio || "",

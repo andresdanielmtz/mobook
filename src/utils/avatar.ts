@@ -1,8 +1,8 @@
-import type { StoreUser } from "@/model/User";
+import type { IUser } from "@/model/User";
 
 // This function returns an initial depending on whether you have first and last name OR if you have the display name. :)
 
-export default function getInitialsAdapter(user: StoreUser): string {
+export default function getInitialsAdapter(user: IUser): string {
   if (user.firstName && user.lastName) {
     const initials = getInitials(`${user.firstName} ${user.lastName}`);
     if (!initials) return "";
