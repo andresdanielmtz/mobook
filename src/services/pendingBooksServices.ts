@@ -12,10 +12,10 @@ import {
   type DocumentData,
 } from "firebase/firestore";
 
-export const getUserWishlist = async (userId: string) => {
+export const getUserPendingBooks = async (userId: string) => {
   try {
-    const wishlistCollection = collection(db, "wishlistBooks");
-    const q = query(wishlistCollection, where("userId", "==", userId));
+    const pendingCollection = collection(db, "pendingBooks");
+    const q = query(pendingCollection, where("userId", "==", userId));
     const querySnapshot = await getDocs(q);
     const books: Item[] = [];
 
@@ -34,34 +34,34 @@ export const getUserWishlist = async (userId: string) => {
 
     return books;
   } catch (error) {
-    console.error("Error fetching user's wishlist", error);
+    console.error("Error fetching user's pending list", error);
     throw error;
   }
 };
 
-export const addBookToUserWishlist = async (
+export const addBookToUserPendingList = async (
   bookId: string,
   userId: string,
 ): Promise<DocumentReference<DocumentData, DocumentData>> => {
   try {
-    const wishlistsCollection = collection(db, "wishlistBooks");
-    const newBookInWishList = await addDoc(wishlistsCollection, {
+    const pendingCollection = collection(db, "pendingBooks");
+    const newBookInPendingList = await addDoc(pendingCollection, {
       userId: userId,
       bookId: bookId,
     });
-    return newBookInWishList;
+    return newBookInPendingList;
   } catch (error) {
-    console.error("Error adding book to user's wihlist", error);
+    console.error("Error adding book to user's pending list", error);
     throw error;
   }
 };
 
-export const removeBookFromUserWishList = async (wishlistId: string) => {
+export const removeBookFromUserPendingList = async (pendingId: string) => {
   try {
-    const wishlistCollection = collection(db, "wishlistBooks");
-    await deleteDoc(doc(wishlistCollection, wishlistId));
+    const pendingCollection = collection(db, "pendingBooks");
+    await deleteDoc(doc(pendingCollection, pendingId));
   } catch (error) {
-    console.error("Error adding book to user's wihlist", error);
+    console.error("Error adding book to user's pending list", error);
     throw error;
   }
 };

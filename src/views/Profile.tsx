@@ -24,6 +24,8 @@ export const ProfileView = () => {
     userData?.bio || "",
   );
   const [wishlistBooks, setWishlistBooks] = useState<Item[]>([]);
+  const [readBooks, setReadBooks] = useState<Item[]>([]);
+  const [pendingBooks, setPendingBooks] = useState<Item[]>([]);
 
   useEffect(() => {
     const fetchWishlistBooks = async () => {

@@ -1,3 +1,4 @@
+import { getBooksById } from "@/api/getBooks";
 import { db } from "@/config/firebase";
 import type { Item } from "@/model";
 import {
@@ -12,29 +13,33 @@ import {
   type DocumentData,
 } from "firebase/firestore";
 
-export const getUserReadBooks = async (userId: string): Promise<Item[]> => {
+// Reading -> Books already read.
+export const getUserWishlist = async (userId: string): Promise<Item[]> => {
   try {
-    const readlistCollection = collection(db, "readingBooks");
-    const q = query(readlistCollection, where("userId", "==", userId));
+    const wishlistCollection = collection(db, "readingBooks");
+    const q = query(wishlistCollection, where("userId", "==", userId));
     const querySnapshot = await getDocs(q);
+
     const books: Item[] = [];
 
-    querySnapshot.forEach((doc) => {
-      books.push({
-        id: doc.id,
-        ...doc.data(),
-        kind: doc.data().kind || "",
-        etag: doc.data().etag || "",
-        selfLink: doc.data().selfLink || "",
-        volumeInfo: doc.data().volumeInfo || undefined,
-        saleInfo: doc.data().saleInfo || undefined,
-        accessInfo: doc.data().accessInfo || undefined,
-      });
-    });
+    // Fetch each book by its bookId
+    for (const docSnap of querySnapshot.docs) {
+      const { bookId } = docSnap.data();
+      if (!bookId) continue;
+      try {
+        const book = await getBooksById(bookId);
+        if (book) {
+          books.push(book);
+        }
+      } catch (err) {
+        console.warn(`Book with id ${bookId} not found or error fetching.`);
+        console.error(err);
+      }
+    }
 
     return books;
   } catch (error) {
-    console.error("Error fetching user's read list", error);
+    console.error("Error fetching user's wishlist", error);
     throw error;
   }
 };
