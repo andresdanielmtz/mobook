@@ -1,17 +1,30 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { type IReview } from "@/model/Reviews";
 import { addReview, getReviewsByBookId } from "@/services/reviewsServices";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import { AuthContext } from "@/context/AuthContext";
+import { getName } from "@/utils/avatar";
+import type { IUser } from "@/model/User";
+import { getUserById } from "@/services/authenticationServices";
 
 interface ReviewsProps {
   bookId: string;
 }
 
 const Reviews = ({ bookId }: ReviewsProps) => {
+  const { user } = useContext(AuthContext);
+
   const [reviews, setReviews] = useState<IReview[]>([]);
   const [reviewMessage, setReviewMessage] = useState<string>("");
   const [error, setError] = useState<Error | null>(null);
+  const [userData, setUserData] = useState<IUser>();
+  useEffect(() => {
+    if (!user) return;
+    getUserById(user.uid).then((payload) => {
+      setUserData(payload);
+    });
+  }, [user]);
 
   const fetchData = async (bookId: string) => {
     try {
@@ -46,9 +59,11 @@ const Reviews = ({ bookId }: ReviewsProps) => {
     }
     if (reviewMessage.trim()) {
       try {
+        if (!userData) return;
+
         await addReview({
           bookId: bookId,
-          userId: "anonymous", // Replace with actual user ID if available
+          userId: getName(userData), // Replace with actual user ID if available
           rating: 5, // Default rating, can be modified
           comment: reviewMessage,
           createdAt: new Date(),
