@@ -10,7 +10,7 @@ import { AuthContext } from "@/context/AuthContext";
 import {
   addBookToUserWishlist,
   checkIfBookInWishlist,
-} from "@/services/userWishlistServices";
+} from "@/services/wishlistBooksServices";
 
 // Show specific book details by ID
 

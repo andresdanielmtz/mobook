@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Pencil } from "@mynaui/icons-react";
 import type { Item } from "@/model";
-import { getUserWishlist } from "@/services/userWishlistServices";
+import { getUserWishlist } from "@/services/wishlistBooksServices";
 import BookShelf from "@/components/BookShelf";
 
 export const ProfileView = () => {
