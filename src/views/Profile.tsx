@@ -15,6 +15,8 @@ import { Pencil } from "@mynaui/icons-react";
 import type { Item } from "@/model";
 import { getUserWishlist } from "@/services/wishlistBooksServices";
 import BookShelf from "@/components/BookShelf";
+import { getUserPendingList } from "@/services/pendingBooksServices";
+import { getUserReadList } from "@/services/readingBooksServices";
 
 export const ProfileView = () => {
   const { userId } = useParams<{ userId: string }>();
@@ -42,7 +44,7 @@ export const ProfileView = () => {
     const fetchReadBooks = async () => {
       if (!userId) return;
 
-      const response = await getUserWishlist(userId);
+      const response = await getUserReadList(userId);
       if (!response || response.length === 0) {
         console.warn("No books found in the user's read list.");
         return;
@@ -54,7 +56,7 @@ export const ProfileView = () => {
     const fetchPendingBooks = async () => {
       if (!userId) return;
 
-      const response = await getUserWishlist(userId);
+      const response = await getUserPendingList(userId);
       if (!response || response.length === 0) {
         console.warn("No books found in the user's pending list.");
         return;

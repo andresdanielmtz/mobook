@@ -11,6 +11,11 @@ import {
   addBookToUserWishlist,
   checkIfBookInWishlist,
 } from "@/services/wishlistBooksServices";
+import {
+  addBookToUserPendingList,
+  checkIfBookInPendingList,
+} from "@/services/pendingBooksServices";
+import { checkIfBookInReadList } from "@/services/readingBooksServices";
 
 // Show specific book details by ID
 
@@ -22,6 +27,11 @@ const DetailsView = () => {
   const [loading, setLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<Error | null>(null);
   const [bookInWishlist, setBookWishlistState] = useState<boolean>(false);
+  const [bookInPendingList, setBookPendingListState] = useState<boolean>(false);
+  const [bookInReadList, setBookReadListState] = useState<boolean>(false);
+
+  const [pendingLoading, setPendingLoading] = useState<boolean>(false);
+  const [readLoading, setReadLoading] = useState<boolean>(false);
   const [wishlistLoading, setWishlistLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -47,6 +57,8 @@ const DetailsView = () => {
     fetchData();
   }, [bookId, bookInWishlist, user]);
 
+  // Check for initial states.
+
   useEffect(() => {
     if (!bookId || !user) return;
     const checkWishlist = async () => {
@@ -57,8 +69,60 @@ const DetailsView = () => {
         console.error("Error checking wishlist:", error);
       }
     };
+    const checkPendingList = async () => {
+      try {
+        const isInPendingList = await checkIfBookInPendingList(
+          bookId,
+          user.uid,
+        );
+        setBookPendingListState(!!isInPendingList);
+      } catch (error) {
+        console.error("Error checking pending list:", error);
+      }
+    };
+    const checkReadList = async () => {
+      try {
+        const isInReadList = await checkIfBookInReadList(bookId, user.uid);
+        setBookReadListState(!!isInReadList);
+      } catch (error) {
+        console.error("Error checking read list:", error);
+      }
+    };
+
+    checkPendingList();
+    checkReadList();
     checkWishlist();
   }, [bookId, user]);
+
+  const handleAddToPendingList = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user || !bookId) return;
+    setPendingLoading(true);
+
+    try {
+      await addBookToUserPendingList(bookId, user.uid);
+      setPendingLoading(true); // Immediately update state
+    } catch (error) {
+      console.error("Error adding book to pending list.", error);
+    } finally {
+      setPendingLoading(false);
+    }
+  };
+
+  const handleAddToReadList = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user || !bookId) return;
+    setReadLoading(true);
+
+    try {
+      await addBookToUserPendingList(bookId, user.uid);
+      setReadLoading(true); // Immediately update state
+    } catch (error) {
+      console.error("Error adding book to read list.", error);
+    } finally {
+      setReadLoading(false);
+    }
+  };
 
   const handleAddToWishlist = async (e: React.FormEvent) => {
     e.preventDefault();

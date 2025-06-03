@@ -1,3 +1,4 @@
+import { getBooksById } from "@/api/getBooks";
 import { db } from "@/config/firebase";
 import type { Item } from "@/model";
 import {
@@ -12,29 +13,51 @@ import {
   type DocumentData,
 } from "firebase/firestore";
 
-export const getUserPendingBooks = async (userId: string) => {
+export const getUserPendingList = async (userId: string) => {
   try {
     const pendingCollection = collection(db, "pendingBooks");
     const q = query(pendingCollection, where("userId", "==", userId));
     const querySnapshot = await getDocs(q);
+
     const books: Item[] = [];
 
-    querySnapshot.forEach((doc) => {
-      books.push({
-        id: doc.id,
-        ...doc.data(),
-        kind: doc.data().kind || "",
-        etag: doc.data().etag || "",
-        selfLink: doc.data().selfLink || "",
-        volumeInfo: doc.data().volumeInfo || undefined,
-        saleInfo: doc.data().saleInfo || undefined,
-        accessInfo: doc.data().accessInfo || undefined,
-      });
-    });
+    // Fetch each book by its bookId
+    for (const docSnap of querySnapshot.docs) {
+      const { bookId } = docSnap.data();
+      if (!bookId) continue;
+      try {
+        const book = await getBooksById(bookId);
+        if (book) {
+          books.push(book);
+        }
+      } catch (err) {
+        console.warn(`Book with id ${bookId} not found or error fetching.`);
+        console.error(err);
+      }
+    }
 
     return books;
   } catch (error) {
     console.error("Error fetching user's pending list", error);
+    throw error;
+  }
+};
+
+export const checkIfBookInPendingList = async (
+  bookId: string,
+  userId: string,
+): Promise<boolean> => {
+  try {
+    const pendingCollection = collection(db, "pendingBooks");
+    const q = query(
+      pendingCollection,
+      where("userId", "==", userId),
+      where("bookId", "==", bookId),
+    );
+    const querySnapshot = await getDocs(q);
+    return !querySnapshot.empty;
+  } catch (error) {
+    console.error("Error checking if book is in user's pending list", error);
     throw error;
   }
 };

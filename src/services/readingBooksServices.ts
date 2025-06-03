@@ -14,7 +14,7 @@ import {
 } from "firebase/firestore";
 
 // Reading -> Books already read.
-export const getUserWishlist = async (userId: string): Promise<Item[]> => {
+export const getUserReadList = async (userId: string): Promise<Item[]> => {
   try {
     const wishlistCollection = collection(db, "readingBooks");
     const q = query(wishlistCollection, where("userId", "==", userId));
@@ -44,6 +44,25 @@ export const getUserWishlist = async (userId: string): Promise<Item[]> => {
   }
 };
 
+export const checkIfBookInReadList = async (
+  bookId: string,
+  userId: string,
+): Promise<boolean> => {
+  try {
+    const wishlistCollection = collection(db, "readingBooks");
+    const q = query(
+      wishlistCollection,
+      where("userId", "==", userId),
+      where("bookId", "==", bookId),
+    );
+    const querySnapshot = await getDocs(q);
+    return !querySnapshot.empty;
+  } catch (error) {
+    console.error("Error checking if book is in user's read list", error);
+    throw error;
+  }
+};
+
 export const addBookToUserReadList = async (
   bookId: string,
   userId: string,
@@ -56,7 +75,7 @@ export const addBookToUserReadList = async (
     });
     return newBookInReadList;
   } catch (error) {
-    console.error("Error adding book to user's wihlist", error);
+    console.error("Error adding book to user's read list", error);
     throw error;
   }
 };
@@ -66,7 +85,7 @@ export const removeBookFromUserReadList = async (readlistId: string) => {
     const readlistsCollection = collection(db, "readingBooks");
     await deleteDoc(doc(readlistsCollection, readlistId));
   } catch (error) {
-    console.error("Error adding book to user's wihlist", error);
+    console.error("Error adding book to user's read list", error);
     throw error;
   }
 };
