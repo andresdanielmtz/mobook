@@ -20,7 +20,7 @@ import {
   checkIfBookInReadList,
 } from "@/services/readingBooksServices";
 
-// Show specific book details by ID
+// Show specific book details by ID as well as reviews for that book.
 
 const DetailsView = () => {
   const { id: bookId } = useParams<{ id: string }>();
@@ -48,7 +48,6 @@ const DetailsView = () => {
       );
       try {
         const response = await getBooksById(bookId);
-
         setData(response);
       } catch (error: unknown) {
         console.error("Error fetching data:", error);
