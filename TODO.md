@@ -1,5 +1,5 @@
 # Personal To-do List
 
-1. Add Toastify for notifications. (Or ShadCN equivalent)
-2. Add Login forms and authentication
-3. Document project structure
+1. Add CRUD operations for the Reviews, Pending, Wishlist and Read books.
+2. (Optional) Refactor Pending, Wishlist and Read Books operations into generic function.
+3. (Optional) Light / Dark mode toggle.
