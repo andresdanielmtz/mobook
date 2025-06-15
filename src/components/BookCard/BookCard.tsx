@@ -40,7 +40,7 @@ const BookCard = ({
   return (
     <div
       tabIndex={0}
-      className={`aspect-3-4 sm:max-w-xs rounded-lg overflow-hidden relative group focus:outline-none cursor-pointer my-5 shadow hover:shadow-lg transition-shadow duration-300 bg-white flex flex-col  w-full ${isUserList ? "h-[400px]" : "h-[350px]"}`}
+      className={`bg-card text-card-foreground aspect-3-4 sm:max-w-xs rounded-lg overflow-hidden relative group focus:outline-none cursor-pointer my-5 shadow hover:shadow-lg transition-shadow duration-300  flex flex-col  w-full ${isUserList ? "h-[400px]" : "h-[350px]"}`}
       onClick={() => navigate(`/books/${id}`)}
     >
       <div className="w-full aspect-[3/4] bg-gray-200 flex items-center justify-center">

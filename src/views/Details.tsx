@@ -147,37 +147,41 @@ const DetailsView = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className="flex items-center justify-center h-screen bg-background text-foreground">
         <LoadingSpinner />
       </div>
     );
   }
 
-  // Return error and no data states
-
   if (error) {
-    return <div>Error: {error.message}</div>;
+    return <div className="text-destructive">{error.message}</div>;
   }
 
   if (!data) {
-    return <div>No data found</div>;
+    return <div className="text-muted-foreground">No data found</div>;
   }
 
   return (
-    <div>
-      <div className="flex justify-start align-bottom mt-5 ml-5 ">
-        <Button onClick={handleBack}> Back</Button>
+    <div className="min-h-screen bg-background text-foreground">
+      <div className="flex justify-start align-bottom mt-5 ml-5">
+        <Button
+          onClick={handleBack}
+          variant="secondary"
+          className="bg-card text-card-foreground"
+        >
+          Back
+        </Button>
       </div>
-      <div className="container mx-auto p-6">
+      <div className="container mx-auto p-6 bg-card rounded-lg shadow-lg mt-4">
         <div className="flex flex-row items-center justify-between align-middle">
-          <h1 className="text-3xl font-bold text-gray-800 mb-6 text-justify">
+          <h1 className="text-3xl font-bold mb-6 text-justify text-card-foreground">
             {data.volumeInfo.title}
           </h1>
         </div>
         <div className="flex flex-col md:flex-row items-start">
           {data.volumeInfo.imageLinks?.thumbnail && (
             <img
-              className="w-full md:w-1/3 rounded shadow-md mb-6 md:mb-0 md:mr-6"
+              className="w-full md:w-1/3 rounded shadow-md mb-6 md:mb-0 md:mr-6 bg-background"
               src={data.volumeInfo.imageLinks?.thumbnail}
               alt={data.volumeInfo.title}
             />
@@ -185,52 +189,53 @@ const DetailsView = () => {
           <div className="flex-1 text-justify">
             <Markup content={data.volumeInfo.description} />
 
-            <h3 className="text-xl font-semibold text-gray-800 mb-4  my-5">
+            <h3 className="text-xl font-semibold mb-4 my-5 text-card-foreground">
               Authors
             </h3>
             <ul className="list-disc list-inside mb-6">
               {data.volumeInfo.authors?.map((author, index) => (
-                <li key={index} className="text-gray-600">
+                <li key={index} className="text-muted-foreground">
                   {author}
                 </li>
               ))}
+            </ul>
 
-              <h3 className="text-xl font-semibold text-gray-800 mb-4 my-5">
-                {" "}
-                Publisher
+            <h3 className="text-xl font-semibold mb-4 my-5 text-card-foreground">
+              Publisher
+            </h3>
+            <p className="text-muted-foreground mb-6">
+              {data.volumeInfo.publisher}
+            </p>
+            {data.volumeInfo.publishedDate ? (
+              <h3 className="text-xl font-semibold mb-4 my-5 text-card-foreground">
+                Published Date: {data.volumeInfo.publishedDate}
               </h3>
-              <p className="text-gray-600 mb-6">{data.volumeInfo.publisher}</p>
-              {data.volumeInfo.publishedDate ? (
-                <h3 className="text-xl font-semibold text-gray-800 mb-4 my-5">
-                  {" "}
-                  Published Date: {data.volumeInfo.publishedDate}
-                </h3>
-              ) : (
-                <h3 className="text-xl font-semibold text-gray-800 mb-4 my-5">
-                  {" "}
-                  Publish Date Unavailable
-                </h3>
-              )}
+            ) : (
+              <h3 className="text-xl font-semibold mb-4 my-5 text-card-foreground">
+                Publish Date Unavailable
+              </h3>
+            )}
 
-              <h3 className="text-xl font-semibold text-gray-800 mb-4 my-5">
-                Categories
-              </h3>
-              <ul className="list-disc list-inside mb-6">
-                {data.volumeInfo.categories?.map((category, index) => (
-                  <li key={index} className="text-gray-600">
-                    {category}
-                  </li>
-                ))}
-              </ul>
+            <h3 className="text-xl font-semibold mb-4 my-5 text-card-foreground">
+              Categories
+            </h3>
+            <ul className="list-disc list-inside mb-6">
+              {data.volumeInfo.categories?.map((category, index) => (
+                <li key={index} className="text-muted-foreground">
+                  {category}
+                </li>
+              ))}
             </ul>
           </div>
         </div>
       </div>
 
-      <div className="flex flex-row gap-4 mb-4">
+      <div className="flex flex-row gap-4 mb-4 mt-6 justify-center">
         <Button
           onClick={handleAddToWishlist}
           disabled={bookInWishlist || wishlistLoading}
+          variant={bookInWishlist ? "secondary" : "default"}
+          className="bg-primary text-primary-foreground"
         >
           {bookInWishlist
             ? "In Wishlist"
@@ -242,6 +247,8 @@ const DetailsView = () => {
         <Button
           onClick={handleAddToPendingList}
           disabled={bookInPendingList || pendingLoading}
+          variant={bookInPendingList ? "secondary" : "default"}
+          className="bg-primary text-primary-foreground"
         >
           {bookInPendingList
             ? "In Pending List"
@@ -253,6 +260,8 @@ const DetailsView = () => {
         <Button
           onClick={handleAddToReadList}
           disabled={bookInReadList || readLoading}
+          variant={bookInReadList ? "secondary" : "default"}
+          className="bg-primary text-primary-foreground"
         >
           {bookInReadList
             ? "In Read List"
@@ -262,11 +271,10 @@ const DetailsView = () => {
         </Button>
       </div>
 
-      {/**
-       * Reviews Section
-       */}
-
-      {bookId && <Reviews bookId={bookId} />}
+      {/* Reviews Section */}
+      <div className="container mx-auto p-6 bg-card rounded-lg shadow-lg mt-4">
+        {bookId && <Reviews bookId={bookId} />}
+      </div>
     </div>
   );
 };

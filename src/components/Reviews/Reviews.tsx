@@ -124,7 +124,7 @@ const Reviews = ({ bookId }: ReviewsProps) => {
 
       {reviews.length > 0 ? (
         <div className="container mx-auto p-4">
-          <h2 className="text-xl font-bold text-gray-800 mb-4">Reviews</h2>
+          <h2 className="text-xl font-bold  mb-4">Reviews</h2>
           <div className="space-y-2">
             {[...reviews]
               .sort(
@@ -147,9 +147,9 @@ const Reviews = ({ bookId }: ReviewsProps) => {
                 return (
                   <div
                     key={review.id}
-                    className="grid grid-cols-[120px_80px_1fr_90px] items-start gap-2 p-2 border rounded bg-white shadow-sm text-sm"
+                    className="grid grid-cols-[120px_80px_1fr_90px] items-start gap-2 p-2 border rounded shadow-sm text-sm"
                   >
-                    <span className="font-semibold text-gray-700 truncate col-span-1 text-left">
+                    <span className="font-semibold  truncate col-span-1 text-left">
                       {review.userId}
                     </span>
                     <span className="flex items-center gap-0.5 col-span-1 justify-start">
@@ -162,7 +162,7 @@ const Reviews = ({ bookId }: ReviewsProps) => {
                         />
                       ))}
                     </span>
-                    <span className="flex-1 text-gray-600 col-span-1 text-left break-words">
+                    <span className="flex-1  col-span-1 text-left break-words">
                       {displayComment}
                       {shouldTruncate && (
                         <button
@@ -180,7 +180,7 @@ const Reviews = ({ bookId }: ReviewsProps) => {
                         </button>
                       )}
                     </span>
-                    <span className="text-xs text-gray-400 text-right col-span-1 flex flex-col items-end gap-1">
+                    <span className="text-xs  text-right col-span-1 flex flex-col items-end gap-1">
                       {review.createdAt
                         ? new Date(review.createdAt).toLocaleDateString()
                         : ""}
@@ -200,9 +200,7 @@ const Reviews = ({ bookId }: ReviewsProps) => {
           </div>
         </div>
       ) : (
-        <div className="text-center text-gray-500 mt-4">
-          No comments found for this.
-        </div>
+        <div className="text-center  mt-4">No comments found for this.</div>
       )}
     </div>
   );

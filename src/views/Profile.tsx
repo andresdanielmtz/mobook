@@ -8,7 +8,6 @@ import { type IUser } from "@/model/User";
 import { getUserById, updateBioByUserID } from "@/services/authServices";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Pencil } from "@mynaui/icons-react";
 import type { Book } from "@/model";
 import {
   getUserWishlist,
@@ -23,6 +22,7 @@ import {
   getUserReadList,
   removeBookFromUserReadList,
 } from "@/services/readingBooksServices";
+import { Pencil } from "lucide-react";
 
 export const ProfileView = () => {
   const { userId } = useParams<{ userId: string }>();
@@ -120,10 +120,10 @@ export const ProfileView = () => {
       });
   };
   return (
-    <div>
+    <div className="min-h-screen bg-background text-foreground">
       {userData ? (
         <div className="max-w-md mx-auto mt-10">
-          <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 text-left">
+          <div className="bg-card shadow-md rounded px-8 pt-6 pb-8 mb-4 text-left text-card-foreground">
             <h2 className="text-xl font-bold mb-4">User Information</h2>
             <div className="mb-6">
               <p>
@@ -145,17 +145,16 @@ export const ProfileView = () => {
                 </>
               )}
             </div>
-            <hr className="mb-6" />
-            {/* TODO: Add cancel button when editing bio. */}
+            <hr className="mb-6 border-border" />
             {isEditingBio ? (
               <div className="mb-4">
                 <textarea
-                  className="w-full p-2 border rounded mb-2"
+                  className="w-full p-2 border rounded mb-2 bg-background text-foreground border-border"
                   defaultValue={userData.bio || ""}
                   onChange={(e) => setEditingBioText(e.target.value)}
                 />
                 <Button
-                  className="bg-blue-500 text-white px-4 py-2 rounded"
+                  className="bg-primary text-primary-foreground px-4 py-2 rounded"
                   onClick={handleEditingBio}
                 >
                   Save
@@ -175,10 +174,12 @@ export const ProfileView = () => {
           </div>
         </div>
       ) : (
-        <p className="text-center">Loading user data...</p>
+        <p className="text-center text-muted-foreground">
+          Loading user data...
+        </p>
       )}
 
-      {/** Shelves displayed in a row */}
+      {/* Shelves displayed in a row */}
       <div className="flex flex-row flex-wrap justify-center space-x-1">
         <BookShelf
           books={wishlistBooks}
