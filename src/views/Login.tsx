@@ -1,8 +1,5 @@
 import { Button } from "@/components/ui/button";
-import {
-  signInWithEmail,
-  signInWithGoogle,
-} from "@/services/authenticationServices";
+import { signInWithEmail, signInWithGoogle } from "@/services/authServices";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";

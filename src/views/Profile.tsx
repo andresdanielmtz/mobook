@@ -5,69 +5,72 @@
 
 import { Button } from "@/components/ui/button";
 import { type IUser } from "@/model/User";
-import {
-  getUserById,
-  updateBioByUserID,
-} from "@/services/authenticationServices";
+import { getUserById, updateBioByUserID } from "@/services/authServices";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Pencil } from "@mynaui/icons-react";
-import type { Item } from "@/model";
-import { getUserWishlist } from "@/services/wishlistBooksServices";
+import type { Book } from "@/model";
+import {
+  getUserWishlist,
+  removeBookFromUserWishList,
+} from "@/services/wishlistBooksServices";
 import BookShelf from "@/components/BookShelf";
-import { getUserPendingList } from "@/services/pendingBooksServices";
-import { getUserReadList } from "@/services/readingBooksServices";
+import {
+  getUserPendingList,
+  removeBookFromUserPendingList,
+} from "@/services/pendingBooksServices";
+import {
+  getUserReadList,
+  removeBookFromUserReadList,
+} from "@/services/readingBooksServices";
+import { Pencil } from "lucide-react";
 
 export const ProfileView = () => {
   const { userId } = useParams<{ userId: string }>();
+
   const [userData, setUserData] = useState<IUser>();
   const [isEditingBio, setIsEditingBio] = useState<boolean>(false);
   const [editingBioText, setEditingBioText] = useState<string>(
     userData?.bio || "",
   );
-  const [wishlistBooks, setWishlistBooks] = useState<Item[]>([]);
-  const [readBooks, setReadBooks] = useState<Item[]>([]);
-  const [pendingBooks, setPendingBooks] = useState<Item[]>([]);
+  const [wishlistBooks, setWishlistBooks] = useState<Book[]>([]);
+  const [readBooks, setReadBooks] = useState<Book[]>([]);
+  const [pendingBooks, setPendingBooks] = useState<Book[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const handleRemoveWishlist = async (bookId: string) => {
+    if (!userId) return;
+    await removeBookFromUserWishList(bookId, userId);
+    setWishlistBooks((prev) => prev.filter((b) => b.id !== bookId));
+  };
+
+  const handleRemovePending = async (bookId: string) => {
+    if (!userId) return;
+    await removeBookFromUserPendingList(bookId, userId);
+    setPendingBooks((prev) => prev.filter((b) => b.id !== bookId));
+  };
+
+  const handleRemoveRead = async (bookId: string) => {
+    if (!userId) return;
+    await removeBookFromUserReadList(bookId, userId);
+    setReadBooks((prev) => prev.filter((b) => b.id !== bookId));
+  };
 
   useEffect(() => {
-    const fetchWishlistBooks = async () => {
-      if (!userId) return;
-
-      const response = await getUserWishlist(userId);
-      if (!response || response.length === 0) {
-        console.warn("No books found in the user's wishlist.");
-        return;
-      }
-      console.log("Fetched wishlist books:", response);
-      setWishlistBooks(response);
+    const fetchUserData = async (userId: string) => {
+      const wishlistBooks = await getUserWishlist(userId);
+      const readBooks = await getUserReadList(userId);
+      const pendingBooks = await getUserPendingList(userId);
+      setWishlistBooks(wishlistBooks);
+      setReadBooks(readBooks);
+      setPendingBooks(pendingBooks);
     };
-    const fetchReadBooks = async () => {
-      if (!userId) return;
-
-      const response = await getUserReadList(userId);
-      if (!response || response.length === 0) {
-        console.warn("No books found in the user's read list.");
-        return;
-      }
-      console.log("Fetched read books:", response);
-      setReadBooks(response);
-    };
-
-    const fetchPendingBooks = async () => {
-      if (!userId) return;
-
-      const response = await getUserPendingList(userId);
-      if (!response || response.length === 0) {
-        console.warn("No books found in the user's pending list.");
-        return;
-      }
-      console.log("Fetched pending books:", response);
-      setPendingBooks(response);
-    };
-
-    fetchWishlistBooks();
-    fetchReadBooks();
-    fetchPendingBooks();
+    if (!userId) {
+      console.error("User ID is not available in the URL parameters.");
+      return;
+    }
+    fetchUserData(userId).finally(() => {
+      setLoading(false); // Set loading to false after fetching data
+    });
   }, [userId]);
 
   useEffect(() => {
@@ -117,10 +120,10 @@ export const ProfileView = () => {
       });
   };
   return (
-    <div>
+    <div className="min-h-screen bg-background text-foreground">
       {userData ? (
         <div className="max-w-md mx-auto mt-10">
-          <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 text-left">
+          <div className="bg-card shadow-md rounded px-8 pt-6 pb-8 mb-4 text-left text-card-foreground">
             <h2 className="text-xl font-bold mb-4">User Information</h2>
             <div className="mb-6">
               <p>
@@ -142,17 +145,16 @@ export const ProfileView = () => {
                 </>
               )}
             </div>
-            <hr className="mb-6" />
-            {/* TODO: Add cancel button when editing bio. */}
+            <hr className="mb-6 border-border" />
             {isEditingBio ? (
               <div className="mb-4">
                 <textarea
-                  className="w-full p-2 border rounded mb-2"
+                  className="w-full p-2 border rounded mb-2 bg-background text-foreground border-border"
                   defaultValue={userData.bio || ""}
                   onChange={(e) => setEditingBioText(e.target.value)}
                 />
                 <Button
-                  className="bg-blue-500 text-white px-4 py-2 rounded"
+                  className="bg-primary text-primary-foreground px-4 py-2 rounded"
                   onClick={handleEditingBio}
                 >
                   Save
@@ -172,14 +174,31 @@ export const ProfileView = () => {
           </div>
         </div>
       ) : (
-        <p className="text-center">Loading user data...</p>
+        <p className="text-center text-muted-foreground">
+          Loading user data...
+        </p>
       )}
 
-      {/** Shelves displayed in a row */}
-      <div className="flex flex-row flex-wrap justify-center space-x-4">
-        <BookShelf books={wishlistBooks} title="Wishlist Books" />
-        <BookShelf books={readBooks} title="Read Books" />
-        <BookShelf books={pendingBooks} title="Pending Books" />
+      {/* Shelves displayed in a row */}
+      <div className="flex flex-row flex-wrap justify-center space-x-1">
+        <BookShelf
+          books={wishlistBooks}
+          title="Wishlist Books"
+          isLoading={loading}
+          onRemoveBook={handleRemoveWishlist}
+        />
+        <BookShelf
+          books={pendingBooks}
+          title="Pending Books"
+          isLoading={loading}
+          onRemoveBook={handleRemovePending}
+        />
+        <BookShelf
+          books={readBooks}
+          title="Read Books"
+          isLoading={loading}
+          onRemoveBook={handleRemoveRead}
+        />
       </div>
     </div>
   );

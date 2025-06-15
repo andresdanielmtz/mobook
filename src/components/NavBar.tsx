@@ -28,8 +28,9 @@ import {
 import { Button } from "./ui/button";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import { type IUser } from "@/model/User";
-import { getUserById } from "@/services/authenticationServices";
+import { getUserById } from "@/services/authServices";
 import getInitialsAdapter from "@/utils/avatar";
+import { ModeToggle } from "./theme-toggle";
 
 const Links: { title: string; url: string }[] = [
   {
@@ -39,10 +40,6 @@ const Links: { title: string; url: string }[] = [
   {
     title: "Search",
     url: "/search",
-  },
-  {
-    title: "Dashboard",
-    url: "/dashboard",
   },
 ];
 
@@ -152,6 +149,9 @@ const NavBar = () => {
         <h2 className="mt-10 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0 mr-5">
           Mobook
         </h2>
+        <div className="ml-auto flex items-center gap-4 mx-3">
+          <ModeToggle />
+        </div>
         {showLogoutModal && (
           <WarningLogoutModal
             onClose={handleCloseLogoutModal}

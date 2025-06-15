@@ -1,6 +1,6 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { registerWithEmailAndPassword } from "@/services/authenticationServices";
+import { registerWithEmailAndPassword } from "@/services/authServices";
 import { validateEmail } from "@/utils/email";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
