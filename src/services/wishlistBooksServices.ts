@@ -34,7 +34,10 @@ export const addBookToUserWishlist = async (
   return response;
 };
 
-export const removeBookFromUserWishList = async (wishlistId: string) => {
-  const response = removeBookFromList(wishlistId, "wishlistBooks");
+export const removeBookFromUserWishList = async (
+  wishlistId: string,
+  userId: string,
+) => {
+  const response = removeBookFromList(wishlistId, userId, "wishlistBooks");
   return response;
 };

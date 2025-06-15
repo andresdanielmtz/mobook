@@ -40,10 +40,6 @@ const Links: { title: string; url: string }[] = [
     title: "Search",
     url: "/search",
   },
-  {
-    title: "Dashboard",
-    url: "/dashboard",
-  },
 ];
 
 interface ListItemProps extends React.ComponentPropsWithoutRef<"a"> {

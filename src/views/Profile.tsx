@@ -10,13 +10,23 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Pencil } from "@mynaui/icons-react";
 import type { Book } from "@/model";
-import { getUserWishlist } from "@/services/wishlistBooksServices";
+import {
+  getUserWishlist,
+  removeBookFromUserWishList,
+} from "@/services/wishlistBooksServices";
 import BookShelf from "@/components/BookShelf";
-import { getUserPendingList } from "@/services/pendingBooksServices";
-import { getUserReadList } from "@/services/readingBooksServices";
+import {
+  getUserPendingList,
+  removeBookFromUserPendingList,
+} from "@/services/pendingBooksServices";
+import {
+  getUserReadList,
+  removeBookFromUserReadList,
+} from "@/services/readingBooksServices";
 
 export const ProfileView = () => {
   const { userId } = useParams<{ userId: string }>();
+
   const [userData, setUserData] = useState<IUser>();
   const [isEditingBio, setIsEditingBio] = useState<boolean>(false);
   const [editingBioText, setEditingBioText] = useState<string>(
@@ -26,6 +36,24 @@ export const ProfileView = () => {
   const [readBooks, setReadBooks] = useState<Book[]>([]);
   const [pendingBooks, setPendingBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+
+  const handleRemoveWishlist = async (bookId: string) => {
+    if (!userId) return;
+    await removeBookFromUserWishList(bookId, userId);
+    setWishlistBooks((prev) => prev.filter((b) => b.id !== bookId));
+  };
+
+  const handleRemovePending = async (bookId: string) => {
+    if (!userId) return;
+    await removeBookFromUserPendingList(bookId, userId);
+    setPendingBooks((prev) => prev.filter((b) => b.id !== bookId));
+  };
+
+  const handleRemoveRead = async (bookId: string) => {
+    if (!userId) return;
+    await removeBookFromUserReadList(bookId, userId);
+    setReadBooks((prev) => prev.filter((b) => b.id !== bookId));
+  };
 
   useEffect(() => {
     const fetchUserData = async (userId: string) => {
@@ -156,12 +184,19 @@ export const ProfileView = () => {
           books={wishlistBooks}
           title="Wishlist Books"
           isLoading={loading}
+          onRemoveBook={handleRemoveWishlist}
         />
-        <BookShelf books={readBooks} title="Read Books" isLoading={loading} />
         <BookShelf
           books={pendingBooks}
           title="Pending Books"
           isLoading={loading}
+          onRemoveBook={handleRemovePending}
+        />
+        <BookShelf
+          books={readBooks}
+          title="Read Books"
+          isLoading={loading}
+          onRemoveBook={handleRemoveRead}
         />
       </div>
     </div>

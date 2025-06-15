@@ -88,13 +88,22 @@ export const addBookToList = async (
 
 export const removeBookFromList = async (
   bookId: string,
+  userId: string,
   collectionName: string,
 ) => {
   try {
     const userCollection = collection(db, collectionName);
-    await deleteDoc(doc(userCollection, bookId));
+    const q = query(
+      userCollection,
+      where("userId", "==", userId),
+      where("bookId", "==", bookId),
+    );
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach(async (document) => {
+      await deleteDoc(doc(userCollection, document.id));
+    });
   } catch (error) {
-    console.error("Error adding book to user's pending list", error);
+    console.error("Error removing book from user's list", error);
     throw error;
   }
 };

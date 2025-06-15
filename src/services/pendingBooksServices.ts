@@ -33,7 +33,10 @@ export const addBookToUserPendingList = async (
   return response;
 };
 
-export const removeBookFromUserPendingList = async (pendingId: string) => {
-  const response = removeBookFromList(pendingId, "pendingBooks");
+export const removeBookFromUserPendingList = async (
+  pendingId: string,
+  userId: string,
+) => {
+  const response = removeBookFromList(pendingId, userId, "pendingBooks");
   return response;
 };

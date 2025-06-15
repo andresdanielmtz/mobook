@@ -32,7 +32,10 @@ export const addBookToUserReadList = async (
   return response;
 };
 
-export const removeBookFromUserReadList = async (readlistId: string) => {
-  const response = removeBookFromList(readlistId, "readingBooks");
+export const removeBookFromUserReadList = async (
+  readlistId: string,
+  userId: string,
+) => {
+  const response = removeBookFromList(readlistId, userId, "readingBooks");
   return response;
 };
