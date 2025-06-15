@@ -25,46 +25,24 @@ export const ProfileView = () => {
   const [wishlistBooks, setWishlistBooks] = useState<Book[]>([]);
   const [readBooks, setReadBooks] = useState<Book[]>([]);
   const [pendingBooks, setPendingBooks] = useState<Book[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const fetchWishlistBooks = async () => {
-      if (!userId) return;
-
-      const response = await getUserWishlist(userId);
-      if (!response || response.length === 0) {
-        console.warn("No books found in the user's wishlist.");
-        return;
-      }
-      console.log("Fetched wishlist books:", response);
-      setWishlistBooks(response);
+    const fetchUserData = async (userId: string) => {
+      const wishlistBooks = await getUserWishlist(userId);
+      const readBooks = await getUserReadList(userId);
+      const pendingBooks = await getUserPendingList(userId);
+      setWishlistBooks(wishlistBooks);
+      setReadBooks(readBooks);
+      setPendingBooks(pendingBooks);
     };
-    const fetchReadBooks = async () => {
-      if (!userId) return;
-
-      const response = await getUserReadList(userId);
-      if (!response || response.length === 0) {
-        console.warn("No books found in the user's read list.");
-        return;
-      }
-      console.log("Fetched read books:", response);
-      setReadBooks(response);
-    };
-
-    const fetchPendingBooks = async () => {
-      if (!userId) return;
-
-      const response = await getUserPendingList(userId);
-      if (!response || response.length === 0) {
-        console.warn("No books found in the user's pending list.");
-        return;
-      }
-      console.log("Fetched pending books:", response);
-      setPendingBooks(response);
-    };
-
-    fetchWishlistBooks();
-    fetchReadBooks();
-    fetchPendingBooks();
+    if (!userId) {
+      console.error("User ID is not available in the URL parameters.");
+      return;
+    }
+    fetchUserData(userId).finally(() => {
+      setLoading(false); // Set loading to false after fetching data
+    });
   }, [userId]);
 
   useEffect(() => {
@@ -173,10 +151,18 @@ export const ProfileView = () => {
       )}
 
       {/** Shelves displayed in a row */}
-      <div className="flex flex-row flex-wrap justify-center space-x-4">
-        <BookShelf books={wishlistBooks} title="Wishlist Books" />
-        <BookShelf books={readBooks} title="Read Books" />
-        <BookShelf books={pendingBooks} title="Pending Books" />
+      <div className="flex flex-row flex-wrap justify-center space-x-1">
+        <BookShelf
+          books={wishlistBooks}
+          title="Wishlist Books"
+          isLoading={loading}
+        />
+        <BookShelf books={readBooks} title="Read Books" isLoading={loading} />
+        <BookShelf
+          books={pendingBooks}
+          title="Pending Books"
+          isLoading={loading}
+        />
       </div>
     </div>
   );
