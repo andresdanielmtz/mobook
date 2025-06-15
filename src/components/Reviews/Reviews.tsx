@@ -9,7 +9,7 @@ import { Button } from "../ui/button";
 import { AuthContext } from "@/context/AuthContext";
 import { getName } from "@/utils/avatar";
 import type { IUser } from "@/model/User";
-import { getUserById } from "@/services/authenticationServices";
+import { getUserById } from "@/services/authServices";
 import { Star } from "lucide-react";
 import StarRating from "../StarRating";
 

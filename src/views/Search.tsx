@@ -7,11 +7,11 @@ import { getBooksByQuery } from "@/api/getBooks";
 import BookCard from "@/components/BookCard/BookCard";
 import { Input } from "@/components/ui/input";
 import { LoadingSpinner } from "@/components/ui/loading";
-import type { Item } from "@/model";
+import type { Book } from "@/model";
 import { useEffect, useState } from "react";
 
 export const SearchView = () => {
-  const [searchResults, setSearchResults] = useState<Item[]>([]);
+  const [searchResults, setSearchResults] = useState<Book[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);

@@ -28,7 +28,7 @@ import {
 import { Button } from "./ui/button";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import { type IUser } from "@/model/User";
-import { getUserById } from "@/services/authenticationServices";
+import { getUserById } from "@/services/authServices";
 import getInitialsAdapter from "@/utils/avatar";
 
 const Links: { title: string; url: string }[] = [

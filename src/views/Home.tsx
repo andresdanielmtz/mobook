@@ -5,12 +5,12 @@
 
 import { useEffect, useState } from "react";
 import { getBooks } from "../api/getBooks";
-import { type Item } from "@/model";
+import { type Book } from "@/model";
 import BookCard from "../components/BookCard/BookCard.tsx";
 import { LoadingSpinner } from "@/components/ui/loading.tsx";
 
 export const HomeView: React.FC = () => {
-  const [bookData, setBookData] = useState<Item[]>([]);
+  const [bookData, setBookData] = useState<Book[]>([]);
   useEffect(() => {
     getBooks()
       .then((payload) => {

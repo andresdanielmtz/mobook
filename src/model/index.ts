@@ -5,10 +5,10 @@ import { type Epub } from "./Epub.ts";
 export interface Content {
   kind: string;
   totalItems: number;
-  items: Item[];
+  items: Book[];
 }
 
-export interface Item {
+export interface Book {
   kind: string;
   id: string;
   etag: string;

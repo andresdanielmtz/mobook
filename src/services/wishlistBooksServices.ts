@@ -5,7 +5,7 @@
 
 import { getBooksById } from "@/api/getBooks";
 import { db } from "@/config/firebase";
-import type { Item } from "@/model";
+import type { Book } from "@/model";
 import {
   addDoc,
   collection,
@@ -21,13 +21,13 @@ import {
 // Though it is necessary to add/remove elements to the wishlist of a specific user. It is not necessary to "update" them, so to speak.
 // This is just a normalized table so the "content" of the elements does not really matter as it is just connections between two different tables. :)
 
-export const getUserWishlist = async (userId: string): Promise<Item[]> => {
+export const getUserWishlist = async (userId: string): Promise<Book[]> => {
   try {
     const wishlistCollection = collection(db, "wishlistBooks");
     const q = query(wishlistCollection, where("userId", "==", userId));
     const querySnapshot = await getDocs(q);
 
-    const books: Item[] = [];
+    const books: Book[] = [];
 
     // Fetch each book by its bookId
     for (const docSnap of querySnapshot.docs) {

@@ -1,13 +1,13 @@
 // This component receives a list of books from the user's wishlist and displays them in a grid format.
 
-import type { Item } from "@/model";
+import type { Book } from "@/model";
 import BookCard from "./BookCard/BookCard";
 
 export default function BookShelf({
   books,
   title,
 }: {
-  books: Item[];
+  books: Book[];
   title: string;
 }) {
   if (books.length === 0) {

@@ -1,7 +1,7 @@
 import { getBooksById } from "@/api/getBooks";
 import { Button } from "@/components/ui/button";
 import { LoadingSpinner } from "@/components/ui/loading";
-import type { Item } from "@/model";
+import type { Book } from "@/model";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Markup } from "interweave";
@@ -26,7 +26,7 @@ const DetailsView = () => {
   const { id: bookId } = useParams<{ id: string }>();
   const { user } = useContext(AuthContext);
 
-  const [data, setData] = React.useState<Item | null>(null);
+  const [data, setData] = React.useState<Book | null>(null);
   const [loading, setLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<Error | null>(null);
   const [bookInWishlist, setBookWishlistState] = useState<boolean>(false);

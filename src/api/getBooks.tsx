@@ -2,9 +2,9 @@
  * Book API Hooks
  */
 
-import { type Item } from "@/model";
+import { type Book } from "@/model";
 
-export async function getBooks(): Promise<Item[]> {
+export async function getBooks(): Promise<Book[]> {
   const response = await fetch(import.meta.env.VITE_BOOK_API_URL);
   const data = await response.json(); // Parse the JSON response
   if (!response.ok) {
@@ -14,7 +14,7 @@ export async function getBooks(): Promise<Item[]> {
   return data.items;
 }
 
-export async function getBooksById(id: string): Promise<Item> {
+export async function getBooksById(id: string): Promise<Book> {
   const response = await fetch(
     `${import.meta.env.VITE_BOOK_API_URL2}/${id}?key=${import.meta.env.VITE_BOOK_KEY}`,
   );
@@ -26,7 +26,7 @@ export async function getBooksById(id: string): Promise<Item> {
   return data;
 }
 
-export async function getBooksByQuery(query: string): Promise<Item[]> {
+export async function getBooksByQuery(query: string): Promise<Book[]> {
   const response = await fetch(
     `${import.meta.env.VITE_BOOK_API_URL2}?q=${query}&key=${import.meta.env.VITE_BOOK_KEY}`,
   );

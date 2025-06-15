@@ -5,14 +5,11 @@
 
 import { Button } from "@/components/ui/button";
 import { type IUser } from "@/model/User";
-import {
-  getUserById,
-  updateBioByUserID,
-} from "@/services/authenticationServices";
+import { getUserById, updateBioByUserID } from "@/services/authServices";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Pencil } from "@mynaui/icons-react";
-import type { Item } from "@/model";
+import type { Book } from "@/model";
 import { getUserWishlist } from "@/services/wishlistBooksServices";
 import BookShelf from "@/components/BookShelf";
 import { getUserPendingList } from "@/services/pendingBooksServices";
@@ -25,9 +22,9 @@ export const ProfileView = () => {
   const [editingBioText, setEditingBioText] = useState<string>(
     userData?.bio || "",
   );
-  const [wishlistBooks, setWishlistBooks] = useState<Item[]>([]);
-  const [readBooks, setReadBooks] = useState<Item[]>([]);
-  const [pendingBooks, setPendingBooks] = useState<Item[]>([]);
+  const [wishlistBooks, setWishlistBooks] = useState<Book[]>([]);
+  const [readBooks, setReadBooks] = useState<Book[]>([]);
+  const [pendingBooks, setPendingBooks] = useState<Book[]>([]);
 
   useEffect(() => {
     const fetchWishlistBooks = async () => {

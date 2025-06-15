@@ -1,6 +1,6 @@
 import { getBooksById } from "@/api/getBooks";
 import { db } from "@/config/firebase";
-import type { Item } from "@/model";
+import type { Book } from "@/model";
 import {
   addDoc,
   collection,
@@ -14,13 +14,13 @@ import {
 } from "firebase/firestore";
 
 // Reading -> Books already read.
-export const getUserReadList = async (userId: string): Promise<Item[]> => {
+export const getUserReadList = async (userId: string): Promise<Book[]> => {
   try {
     const wishlistCollection = collection(db, "readingBooks");
     const q = query(wishlistCollection, where("userId", "==", userId));
     const querySnapshot = await getDocs(q);
 
-    const books: Item[] = [];
+    const books: Book[] = [];
 
     // Fetch each book by its bookId
     for (const docSnap of querySnapshot.docs) {

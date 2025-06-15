@@ -1,65 +1,32 @@
-import { getBooksById } from "@/api/getBooks";
 import { db } from "@/config/firebase";
-import type { Item } from "@/model";
 import {
   addDoc,
   collection,
   deleteDoc,
   doc,
   DocumentReference,
-  getDocs,
-  query,
-  where,
   type DocumentData,
 } from "firebase/firestore";
+import { getBookList, isUserInList } from "./infoServices";
+
+// Pending Book heavily relies on ./InfoServices.ts
+// This is good since the logic in all lists are pretty much the same. :)
 
 export const getUserPendingList = async (userId: string) => {
-  try {
-    const pendingCollection = collection(db, "pendingBooks");
-    const q = query(pendingCollection, where("userId", "==", userId));
-    const querySnapshot = await getDocs(q);
-
-    const books: Item[] = [];
-
-    // Fetch each book by its bookId
-    for (const docSnap of querySnapshot.docs) {
-      const { bookId } = docSnap.data();
-      if (!bookId) continue;
-      try {
-        const book = await getBooksById(bookId);
-        if (book) {
-          books.push(book);
-        }
-      } catch (err) {
-        console.warn(`Book with id ${bookId} not found or error fetching.`);
-        console.error(err);
-      }
-    }
-
-    return books;
-  } catch (error) {
-    console.error("Error fetching user's pending list", error);
-    throw error;
+  const databaseName = "pendingBooks";
+  const userList = await getBookList(userId, databaseName);
+  if (!userList || userList.length === 0) {
+    return [];
   }
+  return userList;
 };
 
 export const checkIfBookInPendingList = async (
   bookId: string,
   userId: string,
 ): Promise<boolean> => {
-  try {
-    const pendingCollection = collection(db, "pendingBooks");
-    const q = query(
-      pendingCollection,
-      where("userId", "==", userId),
-      where("bookId", "==", bookId),
-    );
-    const querySnapshot = await getDocs(q);
-    return !querySnapshot.empty;
-  } catch (error) {
-    console.error("Error checking if book is in user's pending list", error);
-    throw error;
-  }
+  const isBookInPending = await isUserInList(bookId, userId, "pendingBooks");
+  return isBookInPending;
 };
 
 export const addBookToUserPendingList = async (
