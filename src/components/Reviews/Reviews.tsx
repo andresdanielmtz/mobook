@@ -4,7 +4,7 @@ import {
   addReview,
   deleteReview,
   getReviewsByBookId,
-} from "@/services/reviewsServices";
+} from "@/services/reviewService";
 import { Button } from "../ui/button";
 import { AuthContext } from "@/context/AuthContext";
 import { getName } from "@/utils/avatar";

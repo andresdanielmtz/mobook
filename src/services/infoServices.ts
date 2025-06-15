@@ -1,9 +1,22 @@
 import { getBooksById } from "@/api/getBooks";
 import { db } from "@/config/firebase";
 import type { Book } from "@/model";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  DocumentReference,
+  getDocs,
+  query,
+  where,
+  type DocumentData,
+} from "firebase/firestore";
 
-// Based on the name of the collection, it will return the list of books.
+// Basic CRUD Operations used for all lists within this project.
+// The other services are meant to be wrappers of these functions.
+// ?? It could've just been better to have a global function that manages all of this. However, it might have been over-optimization for little to no benefit.
+
 export const getBookList = async (
   userId: string,
   collectionName: string,
@@ -35,7 +48,7 @@ export const getBookList = async (
   }
 };
 
-export const isUserInList = async (
+export const isBookInList = async (
   bookId: string,
   userId: string,
   collectionName: string,
@@ -51,6 +64,37 @@ export const isUserInList = async (
     return !querySnapshot.empty;
   } catch (error) {
     console.error("Error while checking if book is in user's list.");
+    throw error;
+  }
+};
+
+export const addBookToList = async (
+  bookId: string,
+  userId: string,
+  collectionName: string,
+): Promise<DocumentReference<DocumentData, DocumentData>> => {
+  try {
+    const userCollection = collection(db, collectionName);
+    const newBookInUserList = await addDoc(userCollection, {
+      userId: userId,
+      bookId: bookId,
+    });
+    return newBookInUserList;
+  } catch (error) {
+    console.error("Error adding book to user's list", error);
+    throw error;
+  }
+};
+
+export const removeBookFromList = async (
+  bookId: string,
+  collectionName: string,
+) => {
+  try {
+    const userCollection = collection(db, collectionName);
+    await deleteDoc(doc(userCollection, bookId));
+  } catch (error) {
+    console.error("Error adding book to user's pending list", error);
     throw error;
   }
 };
